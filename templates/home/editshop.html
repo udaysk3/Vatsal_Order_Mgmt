@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid" style="max-width:1500px">
+    <!-- Row 1 -->
+    <div class="row">
+      <div class="col-lg-12 d-flex align-items-strech w-100">
+        <div class="card w-100">
+          <div class="card-body">
+            
+{% if shop %}
+  <h3>Update Revenue</h3>
+  <form id="editshop" method="post" enctype="multipart/form-data" action="{% url 'app:editshop' shop %}">
+    {% csrf_token %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if request.user.is_superuser %}
+        <div class="mb-3">
+            <label for="revenue" class="form-label">Revenue</label>
+            <input type="text" class="form-control" id="revenue" name="revenue" value="{{ revenue }}" required>
+        </div>
+        {% endif %}
+        
+        
+        
+
+    <button type="submit" class="btn btn-primary">Update Order</button>
+</form>
+{% else %}
+  <p>Shop not found.</p>
+{% endif %}
+
+</div>
+</div>
+</div>
+{% endblock content %}

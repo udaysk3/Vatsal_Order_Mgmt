@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href={% static "css/styles.min.css" %} />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
+  <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
+  {% endblock %}
+{% block content %}
+
+<div class="container-fluid" style="max-width:1500px">
+    <!-- Row 1 -->
+    <div class="row">
+      <div class="col-lg-12 d-flex align-items-strech w-100">
+        <div class="card w-100">
+          <div class="card-body">
+         
+        {% for message in messages %}
+            <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
+                  {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        
+            
+
+{% if request.GET.page == 'new_order' %}
+
+<h3>Add Order</h3>
+
+<form id="addOrderFrom" method="post" enctype="multipart/form-data" action="{% url 'app:new_order' %}">
+  {% csrf_token %}
+    {% if request.user.is_superuser %}
+  <div class="mb-3">
+    <label for="order_id" class="form-label">Order ID</label>
+    <input type="text" class="form-control" id="order_id" name="order_id" required>
+</div>
+<div class="mb-3">
+    <label for="order_date" class="form-label">Order Date</label>
+    <input type="date" class="form-control" id="order_date" name="order_date" required>
+</div>
+  
+<div class="mb-3">
+    <label for="admin_photo" class="form-label">Admin Photo</label>
+    <input type="file" class="form-control" id="admin_photo" name="admin_photo">
+</div>
+
+
+<div class="mb-3">
+    <label for="title" class="form-label">Title</label>
+    <input type="text" class="form-control" id="title" name="title">
+</div>
+
+<div class="mb-3">
+    <label for="quantity" class="form-label">Quantity</label>
+    <input type="number" class="form-control" id="quantity" name="quantity" value="1">
+</div>
+
+<div class="mb-3">
+    <label for="material" class="form-label">Material</label>
+    <input type="text" class="form-control" id="material" name="material">
+</div>
+
+<div class="mb-3">
+    <label for="color" class="form-label">Color</label>
+    <input type="text" class="form-control" id="color" name="color">
+</div>
+
+<div class="mb-3">
+    <label for="size" class="form-label">Size</label>
+    <input type="text" class="form-control" id="size" name="size">
+</div>
+
+<div class="mb-3">
+    <label for="personalization" class="form-label">Personalization</label>
+    <input type="text" class="form-control" id="personalization" name="personalization">
+</div>
+
+<div class="mb-3">
+    <label for="last_date" class="form-label">Last Date</label>
+    <input type="date" class="form-control" id="last_date" name="last_date">
+</div>
+<div class="mb-3">
+    <label for="original_delivery_date" class="form-label">Original Delivery Date</label>
+    <input type="date" class="form-control" id="original_delivery_date" name="original_delivery_date">
+</div>
+
+<div class="mb-3">
+    <label for="customer_name" class="form-label">Customer Name</label>
+    <input type="text" class="form-control" id="customer_name" name="customer_name">
+</div>
+
+<div class="mb-3">
+    <label for="fax_shipping" class="form-label">Fax Shipping</label>
+    <input type="text" class="form-control" id="fax_shipping" name="fax_shipping">
+</div>
+
+<div class="mb-3">
+    <label for="address" class="form-label">Address</label>
+    <input type="text" class="form-control" id="address" name="address">
+</div>
+
+<div class="mb-3">
+    <label for="shop_name" class="form-label">Shop Name</label>
+    <input type="text" class="form-control" id="shop_name" name="shop_name">
+</div>
+
+<div class="mb-3">
+    <label for="manufacturer_photo" class="form-label">Manufacturer Photo</label>
+    <input type="file" class="form-control" id="manufacturer_photo" name="manufacturer_photo">
+</div>
+
+<div class="mb-3">
+    <label for="material_used1" class="form-label">Material Used </label>
+    <input type="text" class="form-control mb-3" id="material_used1" name="material_used1">
+    <input type="text" class="form-control mb-3" id="material_used2" name="material_used2">
+    <input type="text" class="form-control mb-3" id="material_used3" name="material_used3">
+    <input type="text" class="form-control mb-3" id="material_used4" name="material_used4">
+</div>
+
+<div class="mb-3">
+    <label for="labour1" class="form-label">Labour </label>
+    <input type="text" class="form-control mb-3" id="labour1" name="labour1">
+    <input type="text" class="form-control mb-3" id="labour2" name="labour2">
+    <input type="text" class="form-control mb-3" id="labour3" name="labour3">
+</div>
+
+
+<div class="mb-3">
+    <label for="main_stone1" class="form-label">Main Stone Details</label>
+    <input type="text" class="form-control mb-3" id="main_stone1" name="main_stone1">
+    <input type="text" class="form-control mb-3" id="main_stone2" name="main_stone2">
+    <input type="text" class="form-control mb-3" id="main_stone3" name="main_stone3">
+    <input type="text" class="form-control mb-3" id="main_stone4" name="main_stone4">
+</div>
+
+
+<div class="mb-3">
+    <label for="side_stone1" class="form-label">Side Stone Details</label>
+    <input type="text" class="form-control mb-3" id="side_stone1" name="side_stone1">
+    <input type="text" class="form-control mb-3" id="side_stone2" name="side_stone2">
+    <input type="text" class="form-control mb-3" id="side_stone3" name="side_stone3">
+    <input type="text" class="form-control mb-3" id="side_stone4" name="side_stone4">
+</div>
+
+
+
+<div class="mb-3">
+    <label for="delivery_cost" class="form-label">Delivery Cost</label>
+    <input type="number" class="form-control" id="delivery_cost" name="delivery_cost" value="0">
+</div>
+
+<div class="mb-3">
+    <label for="packaging_cost" class="form-label">Packaging Cost</label>
+    <input type="number" class="form-control" id="packaging_cost" name="packaging_cost" value="0">
+</div>
+
+{% endif %}
+
+
+
+  
+  <!-- Button trigger modal -->
+    <button type="submit" class="btn btn-primary" >
+      Add order
+    </button>
+
+
+
+</form>
+{% endif %}
+
+<!-- Similar to the user edit form, create a form for editing a Order -->
+<!-- Adjust the form action URL and method accordingly -->
+{% if item %}
+  <h3>Edit Order</h3>
+  <form id="editOrderForm" method="post" enctype="multipart/form-data" action="{% url 'app:edit_order' item.id %}">
+    {% csrf_token %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if request.user.is_superuser %}
+        <div class="mb-3">
+            <label for="order_id" class="form-label">Order ID</label>
+            <input type="text" class="form-control" id="order_id" name="order_id" value="{{ item.order_id }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="order_date" class="form-label">Order Date</label>
+            <input type="date" class="form-control" id="order_date" name="order_date" value="{{ item.order_date }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="admin_photo" class="form-label">Admin Photo</label>
+            <input type="file" class="form-control" id="admin_photo" name="admin_photo" value="{{item.admin_photo.url}}">
+        </div>
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" name="title" value="{{ item.title }}">
+        </div>
+        <div class="mb-3">
+            <label for="quantity" class="form-label">Quantity</label>
+            <input type="number" class="form-control" id="quantity" name="quantity" value="{{ item.quantity }}">
+        </div>
+        <div class="mb-3">
+            <label for="material" class="form-label">Material</label>
+            <input type="text" class="form-control" id="material" name="material" value="{{ item.material }}">
+        </div>
+        <div class="mb-3">
+            <label for="color" class="form-label">Color</label>
+            <input type="text" class="form-control" id="color" name="color" value="{{ item.color }}">
+        </div>
+        <div class="mb-3">
+            <label for="size" class="form-label">Size</label>
+            <input type="text" class="form-control" id="size" name="size" value="{{ item.size }}">
+        </div>
+        <div class="mb-3">
+            <label for="personalization" class="form-label">Personalization</label>
+            <input type="text" class="form-control" id="personalization" name="personalization" value="{{ item.personalization }}">
+        </div>
+        <div class="mb-3">
+            <label for="last_date" class="form-label">Last Date</label>
+            <input type="date" class="form-control" id="last_date" name="last_date" value="{{ item.last_date }}">
+        </div>
+        <div class="mb-3">
+            <label for="original_delivery_date" class="form-label">Original Delivery Date
+            </label>
+            <input type="date" class="form-control" id="original_delivery_date" name="original_delivery_date" value="{{ item.original_delivery_date }}">
+        </div>
+        <div class="mb-3">
+            <label for="customer_name" class="form-label">Customer Name</label>
+            <input type="text" class="form-control" id="customer_name" name="customer_name" value="{{ item.customer_name }}">
+        </div>
+        <div class="mb-3">
+            <label for="fax_shipping" class="form-label">Fax Shipping</label>
+            <input type="text" class="form-control" id="fax_shipping" name="fax_shipping" value="{{ item.fax_shipping }}">
+        </div>
+        <div class="mb-3">
+            <label for="address" class="form-label">Address</label>
+            <input type="text" class="form-control" id="address" name="address" value="{{ item.address }}">
+        </div>
+        <div class="mb-3">
+            <label for="shop_name" class="form-label">Shop Name</label>
+            <input type="text" class="form-control" id="shop_name" name="shop_name" value="{{ item.shop_name }}">
+        </div>
+        {% endif %}
+        {% if not request.user.user_type == "employee" %}
+        <div class="mb-3">
+            <label for="manufacturer_photo" class="form-label">Manufacturer Photo</label>
+            <input type="file" class="form-control" id="manufacturer_photo" name="manufacturer_photo">
+        </div>
+        <div class="mb-3">
+            <label for="material_used1" class="form-label">Material Used</label>
+            <input type="text" class="form-control mb-3" id="material_used1" name="material_used1" value="{{ item.material_used1 }}">
+            <input type="text" class="form-control mb-3" id="material_used2" name="material_used2" value="{{ item.material_used2 }}">
+            <input type="text" class="form-control mb-3" id="material_used3" name="material_used3" value="{{ item.material_used3 }}">
+            <input type="text" class="form-control mb-3" id="material_used4" name="material_used4" value="{{ item.material_used4 }}">
+        </div>
+        <div class="mb-3">
+            <label for="labour1" class="form-label">Labour</label>
+            <input type="text" class="form-control mb-3" id="labour1" name="labour1" value="{{ item.labour1 }}">
+            <input type="text" class="form-control mb-3" id="labour2" name="labour2" value="{{ item.labour2 }}">
+            <input type="text" class="form-control mb-3" id="labour3" name="labour3" value="{{ item.labour3 }}">
+        </div>
+        
+        {% endif %}
+
+        {% if not request.user.user_type == "manufacturer" %}
+        <div class="mb-3">
+            <label for="main_stone1" class="form-label">Main Stone 1</label>
+            <input type="text" class="form-control mb-3" id="main_stone1" name="main_stone1" value="{{ item.main_stone1 }}">
+            <input type="text" class="form-control mb-3" id="main_stone2" name="main_stone2" value="{{ item.main_stone2 }}">
+            <input type="text" class="form-control mb-3" id="main_stone3" name="main_stone3" value="{{ item.main_stone3 }}">
+            <input type="text" class="form-control mb-3" id="main_stone4" name="main_stone4" value="{{ item.main_stone4 }}">
+        </div>
+        <div class="mb-3">
+            <label for="side_stone1" class="form-label">Side Stone 1</label>
+            <input type="text" class="form-control mb-3" id="side_stone1" name="side_stone1" value="{{ item.side_stone1 }}">
+            <input type="text" class="form-control mb-3" id="side_stone2" name="side_stone2" value="{{ item.side_stone2 }}">
+            <input type="text" class="form-control mb-3" id="side_stone3" name="side_stone3" value="{{ item.side_stone3 }}">
+            <input type="text" class="form-control mb-3" id="side_stone4" name="side_stone4" value="{{ item.side_stone4 }}">
+        </div>
+        <div class="mb-3">
+            <label for="delivery_cost" class="form-label">Delivery Cost</label>
+            <input type="number" class="form-control" id="delivery_cost" name="delivery_cost" value="{{ item.delivery_cost }}">
+        </div>
+        <div class="mb-3">
+            <label for="packaging_cost" class="form-label">Packaging Cost</label>
+            <input type="number" class="form-control" id="packaging_cost" name="packaging_cost" value="{{ item.packaging_cost }}">
+        </div>
+        {% endif %}
+        
+        
+        
+
+    <button type="submit" class="btn btn-primary">Update Order</button>
+</form>
+{% endif %}
+
+</div>
+</div>
+</div>
+{% endblock content %}
+
+{% block js %}
+ 
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+  {% endblock js %}
