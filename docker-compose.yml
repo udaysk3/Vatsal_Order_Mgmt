@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  django-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: django-app
+    ports:
+      - "8000:8000"
+    volumes:
+      - web_data:/app
+      - static:/app/staticfiles/
+
+  nginx:
+    image: nginx:1.23-alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - static:/static/
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - django-app
+
+volumes:
+  web_data:
+  static:
