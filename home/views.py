@@ -204,6 +204,7 @@ def dashboard(request):
         shops = set(Item.objects.values_list('shop_name', flat=True))
         total_revenue = 0.0
         shop_details = []
+        revenue = 0.0
         for shop in shops:
             print(shop)
             # Calculate total orders of the shop
