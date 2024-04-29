@@ -39,11 +39,59 @@
             <div>
               <a href="/completed_orders" class="btn btn-primary">Completed Orders</a>
             </div>
+            <div>
+
+              <button type="button" class="btn btn-primary position-relative"  data-bs-toggle="modal" data-bs-target="#fundingroute">
+                <i class="bi bi-arrow-bar-right"></i> Assign to Manufacturer
+              </button>
+
+              <!-- Modal -->
+              <div class="modal fade" id="fundingroute" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="staticBackdropLabel">Select the Manufacturer</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method='post' action="{% url 'app:assign_to_manufacturer'  %}">
+                      {% csrf_token %}
+                    <div class="modal-body">
+                      <div class="mb-3">
+                          <label for="order" class="form-label" >Order</label>
+                          <select class="form-select" name="order" id="order" required>
+                              <option value="">Select Order</option>
+
+                              {% for order in items %}
+                              <option value="{{order.id}}">{{order.order_id}} - {{order.title}}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                      <div class="mb-3">
+                          <label for="manufacturer" class="form-label" >Manufacturer</label>
+                          <select class="form-select" name="manufacturer" id="manufacturer" required>
+                              <option value="">Select Manufacturer</option>
+                              {% for man in mans %}
+                              <option value="{{man.id}}">{{man.first_name}}{{man.last_name}}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                  </form>
+                  </div>
+                </div>
+              </div>
+              
+          </div>
+          
             {% endif %}
             <div>
 
                 <button type="button" class="btn btn-primary position-relative"  data-bs-toggle="modal" data-bs-target="#fundingroute">
-                  <i class="bi bi-arrow-bar-right"></i> Filter by Shop
+                  <i class="bi bi-filter"></i> Filter by Shop
                 </button>
   
                 <!-- Modal -->
@@ -89,25 +137,24 @@
   <div class="card pt-5">
       <div class="card-body" style="">
         <span> <b>Order ID :</b> {{item.order_id}} </span> <br>
-        <span> <b>Order Date  :</b> {{item.order_date}} </span>
-        {% if not item.completed %}
+        <span> <b>2nd Order ID :</b> {{item.order_id_2}} </span> <br>
+        <span> <b>Order Date  :</b> {{item.order_date|date:"d-m-Y"}} </span> <br>
+        {% if not item.completed and request.user.is_superuser %}
             <a  href="{% url "app:markascomplete" item.id %}" class="btn btn-success" style="position: absolute; left: 10px; top: 10px;">Mark as Complete</a>
             {% endif %}
             <a href="{% url 'app:edit_order' item.id  %}" class="btn btn-warning" style="position: absolute; right: 10px; top: 10px;">Edit Order</a>
-            <div class="row">
-              <div class="col-sm-1">
+            <div class="row mt-3">
+              <div class="col-sm-2">
                   <div class="card" style="border: 1px solid #ff0">
                     {% if item.admin_photo %}
                       <a href="{{item.admin_photo.url}}" target="_blank"><img src="{{item.admin_photo.url}}" width="250px" class="card-img-top"  alt="Admin Photo"></a>
                       {% endif %}
                     </div>
-              </div>
-              <div class="col-sm-1">
-                  <div class="card" style="border: 1px solid #ff0">
-                    {% if item.manufacturer_photo %}
-                    <a href="{{item.manufacturer_photo.url}}" target="_blank"> <img src="{{item.manufacturer_photo.url}}" class="card-img-top" alt="Manufacturer Photo"></a>
-                      {% endif %}
-                  </div>
+                    <div class="card" style="border: 1px solid #ff0">
+                      {% if item.manufacturer_photo %}
+                      <a href="{{item.manufacturer_photo.url}}" target="_blank"> <img src="{{item.manufacturer_photo.url}}" class="card-img-top" alt="Manufacturer Photo"></a>
+                        {% endif %}
+                    </div>
               </div>
               <div class="col-sm-3">
                   <div class="card">
@@ -119,8 +166,8 @@
                             <p> <b> Color : </b> {{item.color}} </p>
                             <p> <b> Size : </b> {{item.size}} </p>
                             <p> <b> Personalization : </b> {{item.personalization}} </p>
-                            <p> <b> Order Date : </b> {{item.order_date}} </p>
-                            <p> <b> Last Date : </b> {{item.last_date}} </p>
+                            <p> <b> Order Date : </b> {{item.order_date|date:"d-m-Y"}} </p>
+                            <p> <b> Last Date : </b> {{item.last_date|date:"d-m-Y"}} </p>
                       </div>
                   </div>
               </div>
@@ -183,11 +230,12 @@
               <div class="col-sm-3">
                   <div class="card">
                     <div class="card-body">
-                        <p> <b> Original Delivery Date : </b> {{item.original_delivery_date}} </p>
+                        <p> <b> Original Delivery Date : </b> {{item.original_delivery_date|date:"d-m-Y" }} </p>
                         <p> <b> Customer Name : </b> {{item.customer_name}} </p>
-                          <p> <b> Fax Shipping : </b> {{item.fax_shipping}} </p>
+                          <p> <b> Fast Shipping : </b> {{item.fast_shipping}} </p>
                           <p> <b> Address : </b> {{item.address}} </p>
                           <p class="mt-5"> <b> Shop Name : </b> {{item.shop_name}} </p>
+                          <p class="mt-5"> <b> Assigned to : </b> {{item.assigned_to.first_name}} {{item.assigned_to.last_name}} </p>
                     </div>
                   </div>
               </div>

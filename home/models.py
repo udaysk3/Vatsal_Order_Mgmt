@@ -2,6 +2,7 @@ from django.db import models
 
 class Item(models.Model):
     order_id = models.CharField(max_length=100)
+    order_id_2 = models.CharField(max_length=100)
     order_date = models.DateField()
     admin_photo = models.ImageField(upload_to='photos/%Y/%m/%d/', blank = True, null= True)
     manufacturer_photo = models.ImageField(upload_to='photos/%Y/%m/%d/', blank = True, null= True)
@@ -15,31 +16,34 @@ class Item(models.Model):
     main_stone1 = models.CharField(max_length=100, blank = True, null= True)
     main_stone2 = models.CharField(max_length=100, blank = True, null= True)
     main_stone3 = models.CharField(max_length=100, blank = True, null= True)
-    main_stone4 = models.CharField(max_length=100, blank = True, null= True)
+    main_stone4 = models.FloatField(default=0)
     side_stone1 = models.CharField(max_length=100, blank = True, null= True)
     side_stone2 = models.CharField(max_length=100, blank = True, null= True)
     side_stone3 = models.CharField(max_length=100, blank = True, null= True)
-    side_stone4 = models.CharField(max_length=100, blank = True, null= True)
+    side_stone4 = models.FloatField(default=0)
     material_used1 = models.CharField(max_length=100, blank = True, null= True)
     material_used2 = models.CharField(max_length=100, blank = True, null= True)
     material_used3 = models.CharField(max_length=100, blank = True, null= True)
-    material_used4 = models.CharField(max_length=100, blank = True, null= True)
+    material_used4 = models.FloatField(default=0)
     labour1 = models.CharField(max_length=100, blank = True, null= True)
     labour2 = models.CharField(max_length=100, blank = True, null= True)
-    labour3 = models.CharField(max_length=100, blank = True, null= True)
+    labour3 = models.FloatField(default=0)
     delivery_cost = models.FloatField(default=0)
     packaging_cost = models.FloatField(default=0)
     total_cost = models.FloatField(default=0)
     original_delivery_date = models.DateField(blank = True, null= True)
     customer_name = models.CharField(max_length=100, blank = True, null= True)
-    fax_shipping = models.CharField(max_length=100, blank = True, null= True)
+    fast_shipping = models.BooleanField(default=False)
     address = models.CharField(max_length=100, blank = True, null= True)
     shop_name = models.CharField(max_length=100)
     revenue = models.FloatField(default=0)
     completed = models.BooleanField(default=False)
+    assigned_to = models.ForeignKey('user.User', on_delete=models.DO_NOTHING, blank = True, null= True)
     
     def getOrderID(self):
         return self.order_id if self.order_id else ''
+    def get2OrderID(self):
+        return self.order_id_2 if self.order_id_2 else ''
     
     def getOrderDate(self):
         return self.order_date if self.order_date else None
@@ -131,8 +135,8 @@ class Item(models.Model):
     def getCustomerName(self):
         return self.customer_name if self.customer_name else ''
     
-    def getFaxShipping(self):
-        return self.fax_shipping if self.fax_shipping else ''
+    def getFastShipping(self):
+        return self.fast_shipping if self.fast_shipping else False
     
     def getAddress(self):
         return self.address if self.address else ''

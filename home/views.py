@@ -18,9 +18,13 @@ def dashboard(request):
 
 @login_required
 def orders(request):
-    orders = Item.objects.filter(completed=False)
+    if request.user.user_type == "manufacturer":
+        orders = Item.objects.filter(assigned_to=request.user, completed=False)
+    else:
+        orders = Item.objects.filter(completed=False)
     shops = Item.objects.values('shop_name').distinct()
-    return render(request, "home/orders.html", {"items": orders, "shops" : shops})
+    mans = User.objects.filter(user_type="manufacturer")
+    return render(request, "home/orders.html", {"items": orders, "shops" : shops, "mans": mans})
 
 
 @login_required
@@ -35,9 +39,14 @@ def Admin(request):
 @login_required
 def newOrder(request):
     if request.method == "POST":
+        if request.POST.get('completed') == 'on':
+             request.POST['completed'] = True
+        else:
+             request.POST['completed'] = False
         try:
             order_data = {
                 'order_id': request.POST.get('order_id'),
+                'order_id_2': request.POST.get('order_id_2'),
                 'order_date': request.POST.get('order_date'),
                 'admin_photo': request.FILES.get('admin_photo'),
                 'manufacturer_photo': request.FILES.get('manufacturer_photo'),
@@ -68,7 +77,7 @@ def newOrder(request):
                 'total_cost': request.POST.get('total_cost', 0),
                 'original_delivery_date': request.POST.get('original_delivery_date'),
                 'customer_name': request.POST.get('customer_name'),
-                'fax_shipping': request.POST.get('fax_shipping'),
+                'fast_shipping': request.POST.get('fast_shipping', False),
                 'address': request.POST.get('address'),
                 'shop_name': request.POST.get('shop_name'),
                 'completed': request.POST.get('completed', False),
@@ -87,6 +96,7 @@ def editOrder(request, id):
     if request.method == 'POST':
         try:
             order.order_id = request.POST.get('order_id', order.getOrderID())
+            order.order_id_2 = request.POST.get('order_id_2', order.get2OrderID())
             order.order_date = request.POST.get('order_date', order.getOrderDate())
             if request.FILES.get('admin_photo'):
                 order.admin_photo = request.FILES.get('admin_photo')
@@ -117,14 +127,20 @@ def editOrder(request, id):
             order.labour3 = request.POST.get('labour3', order.getLabour3())
             order.delivery_cost = request.POST.get('delivery_cost', order.getDeliveryCost())
             order.packaging_cost = request.POST.get('packaging_cost', order.getPackagingCost())
-            order.total_cost = float(order.getPackagingCost()) + float(order.getDeliveryCost())
+            order.total_cost = float(order.getMainStone4) + float(order.getSideStone4) + float(order.getMaterialUsed4) + float(order.getLabour3) + float(order.getPackagingCost()) + float(order.getDeliveryCost())
             if request.POST.get('original_delivery_date'):
                 order.original_delivery_date = request.POST.get('original_delivery_date', order.getOriginalDeliveryDate())
             order.customer_name = request.POST.get('customer_name', order.getCustomerName())
-            order.fax_shipping = request.POST.get('fax_shipping', order.getFaxShipping())
             order.address = request.POST.get('address', order.getAddress())
             order.shop_name = request.POST.get('shop_name', order.getShopName())
-            print(request.POST)
+            if request.POST.get('fast_shipping') == 'on':
+                order.fast_shipping = True
+            else:
+                order.fast_shipping = False
+            if request.POST.get('completed') == 'on':
+                order.completed = True
+            else:
+                order.completed = False
             order.save()
             messages.success(request, "Order updated successfully")
             return redirect('/orders')  # Redirect to home page or any other appropriate URL
@@ -135,14 +151,39 @@ def editOrder(request, id):
 
 def filterByShop(request):
     shop_name = request.POST['shop_name']
-    orders = Item.objects.filter(shop_name=shop_name)
+    if request.user.user_type == "manufacturer":
+        orders = Item.objects.filter(assigned_to=request.user, shop_name=shop_name)
+    else:
+        orders = Item.objects.filter(shop_name=shop_name)
+    mans = User.objects.filter(user_type="manufacturer")
     shops = Item.objects.values('shop_name').distinct()
-    return render(request, "home/orders.html", {"items": orders, "shops": shops})
+    return render(request, "home/orders.html", {"items": orders, "shops": shops, "mans": mans})
+
+def assign_to_manufacturer(request):
+    if request.user.user_type == "manufacturer":
+        orders = Item.objects.filter(completed=False, assigned_to=request.user)
+    else:
+        orders = Item.objects.filter(completed=False)
+    shops = Item.objects.values('shop_name').distinct()
+    mans = User.objects.filter(user_type="manufacturer")
+    if request.method == "GET":
+        return render(request, "home/orders.html", {"items": orders, "shops": shops, "mans": mans})
+    manufacturer = request.POST['manufacturer']
+    man = User.objects.get(id=manufacturer)
+    item = Item.objects.get(id=request.POST['order'])
+    item.assigned_to = man
+    item.save()
+    messages.success(request, "Order assigned to manufacturer")
+    return render(request, "home/orders.html", {"items": orders, "shops": shops, "mans": mans})
 
 def completedOrders(request):
-    orders = Item.objects.filter(completed=True)
+    if request.user.user_type == "manufacturer":
+        orders = Item.objects.filter(completed=True, assigned_to=request.user)
+    else:
+        orders = Item.objects.filter(completed=True)
     shops = Item.objects.values('shop_name').distinct()
-    return render(request, "home/orders.html", {"items": orders, "shops": shops})
+    mans = User.objects.filter(user_type="manufacturer")
+    return render(request, "home/orders.html", {"items": orders, "shops": shops, "mans": mans})
 
 def markAsComplete(request,id):
     try:

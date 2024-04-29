@@ -37,6 +37,10 @@
     <label for="order_id" class="form-label">Order ID</label>
     <input type="text" class="form-control" id="order_id" name="order_id" required>
 </div>
+  <div class="mb-3">
+    <label for="order_id_2" class="form-label">2nd Order ID</label>
+    <input type="text" class="form-control" id="order_id_2" name="order_id_2" required>
+</div>
 <div class="mb-3">
     <label for="order_date" class="form-label">Order Date</label>
     <input type="date" class="form-control" id="order_date" name="order_date" required>
@@ -93,8 +97,10 @@
 </div>
 
 <div class="mb-3">
-    <label for="fax_shipping" class="form-label">Fax Shipping</label>
-    <input type="text" class="form-control" id="fax_shipping" name="fax_shipping">
+    <input class="form-check-input" type="checkbox" name="fast_shipping"  id="fast_shipping">
+    <label class="form-check-label" for="fast_shipping">
+        Fast Shipping ?
+    </label>
 </div>
 
 <div class="mb-3">
@@ -157,6 +163,15 @@
     <input type="number" class="form-control" id="packaging_cost" name="packaging_cost" value="0">
 </div>
 
+<div class="mb-3">
+    <input class="form-check-input" type="checkbox" name="completed" id="completed" >
+    <label class="form-check-label" for="completed">
+        Completed ?
+    </label>
+</div>
+
+
+
 {% endif %}
 
 
@@ -186,8 +201,12 @@
             <input type="text" class="form-control" id="order_id" name="order_id" value="{{ item.order_id }}" required>
         </div>
         <div class="mb-3">
+            <label for="order_id_2" class="form-label">2nd Order ID</label>
+            <input type="text" class="form-control" id="order_id_2" name="order_id_2" value="{{ item.order_id_2 }}" required>
+        </div>
+        <div class="mb-3">
             <label for="order_date" class="form-label">Order Date</label>
-            <input type="date" class="form-control" id="order_date" name="order_date" value="{{ item.order_date }}" required>
+            <input type="date" class="form-control" id="order_date" name="order_date" value="{{ item.order_date|date:"Y-m-d"  }}" required>
         </div>
         <div class="mb-3">
             <label for="admin_photo" class="form-label">Admin Photo</label>
@@ -219,20 +238,22 @@
         </div>
         <div class="mb-3">
             <label for="last_date" class="form-label">Last Date</label>
-            <input type="date" class="form-control" id="last_date" name="last_date" value="{{ item.last_date }}">
+            <input type="date" class="form-control" id="last_date" name="last_date" value="{{ item.last_date|date:"Y-m-d"  }}">
         </div>
         <div class="mb-3">
             <label for="original_delivery_date" class="form-label">Original Delivery Date
             </label>
-            <input type="date" class="form-control" id="original_delivery_date" name="original_delivery_date" value="{{ item.original_delivery_date }}">
+            <input type="date" class="form-control" id="original_delivery_date" name="original_delivery_date" value="{{ item.original_delivery_date|date:"Y-m-d"  }}">
         </div>
         <div class="mb-3">
             <label for="customer_name" class="form-label">Customer Name</label>
             <input type="text" class="form-control" id="customer_name" name="customer_name" value="{{ item.customer_name }}">
         </div>
         <div class="mb-3">
-            <label for="fax_shipping" class="form-label">Fax Shipping</label>
-            <input type="text" class="form-control" id="fax_shipping" name="fax_shipping" value="{{ item.fax_shipping }}">
+            <input class="form-check-input" type="checkbox" name="fast_shipping" id="fast_shipping" {% if item.fast_shipping %}checked{% endif %}>
+            <label class="form-check-label" for="fast_shipping">
+                Fast Shipping ?
+            </label>
         </div>
         <div class="mb-3">
             <label for="address" class="form-label">Address</label>
@@ -241,6 +262,12 @@
         <div class="mb-3">
             <label for="shop_name" class="form-label">Shop Name</label>
             <input type="text" class="form-control" id="shop_name" name="shop_name" value="{{ item.shop_name }}">
+        </div>
+        <div class="mb-3">
+            <input class="form-check-input" type="checkbox" name="completed" id="completed" {% if item.completed %}checked{% endif %}>
+            <label class="form-check-label" for="completed">
+                Completed ?
+            </label>
         </div>
         {% endif %}
         {% if not request.user.user_type == "employee" %}
@@ -287,11 +314,9 @@
             <label for="packaging_cost" class="form-label">Packaging Cost</label>
             <input type="number" class="form-control" id="packaging_cost" name="packaging_cost" value="{{ item.packaging_cost }}">
         </div>
+       
         {% endif %}
         
-        
-        
-
     <button type="submit" class="btn btn-primary">Update Order</button>
 </form>
 {% endif %}
