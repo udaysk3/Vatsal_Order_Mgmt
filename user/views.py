@@ -65,7 +65,7 @@ def add_user(request):
 def edit_user(request, user_id):
     user = User.objects.get(pk=user_id)
     if request.method == 'POST':
-        print(request.POST)
+        #print(request.POST)
         user.email = request.POST.get('email')
         if request.POST.get('password'):
             user.password = make_password(request.POST.get('password'))

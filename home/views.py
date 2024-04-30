@@ -76,13 +76,13 @@ def newOrder(request):
                 'shop_name': request.POST.get('shop_name'),
                 'completed': request.POST.get('completed', False),
             }
-            print(request.POST)
+            #print(request.POST)
             if(request.POST["order_date"]):
                 order_data["order_date"] = request.POST["order_date"]
                 
             if(request.POST["last_date"]):
                 order_data["last_date"] = request.POST["last_date"]
-                print("sdfdf")
+                #print("sdfdf")
             if(request.POST["original_delivery_date"]):
                 order_data["original_delivery_date"] = request.POST["original_delivery_date"]
             
@@ -191,7 +191,7 @@ def completedOrders(request):
 
 def markAsComplete(request,id):
     try:
-        print(id)
+        #print(id)
         order = Item.objects.get(id=id)
         order.completed = True
         order.save()
@@ -210,7 +210,7 @@ def dashboard(request):
         shop_details = []
         revenue = 0.0
         for shop in shops:
-            print(shop)
+            #print(shop)
             # Calculate total orders of the shop
             total_shop_orders = Item.objects.filter(shop_name=shop).count()
             
@@ -233,7 +233,7 @@ def dashboard(request):
                 "revenue" : revenue
             })
             total_revenue += revenue
-            print(shop_details)
+            #print(shop_details)
         return render(request, 'home/dashboard.html', {'shop_details': shop_details, 'total_orders' : total_orders, "new_orders" : new_orders, "completed_orders" : completed_orders, "revenue": revenue, "total_revenue": total_revenue})
     else:
             shop_name = request.POST["shop_name"]
