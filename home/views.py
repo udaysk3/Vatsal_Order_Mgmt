@@ -71,11 +71,17 @@ def newOrder(request):
                 'packaging_cost': request.POST.get('packaging_cost', 0),
                 'total_cost': request.POST.get('total_cost', 0),
                 'customer_name': request.POST.get('customer_name'),
-                'fast_shipping': request.POST.get('fast_shipping', False),
                 'address': request.POST.get('address'),
                 'shop_name': request.POST.get('shop_name'),
-                'completed': request.POST.get('completed', False),
             }
+            if request.POST.get('fast_shipping') == 'on':
+                order_data['fast_shipping'] = True
+            else:
+                order_data['fast_shipping'] = False
+            if request.POST.get('completed') == 'on':
+                order_data['completed'] = True
+            else:
+                order_data['completed'] = False
             #print(request.POST)
             if(request.POST["order_date"]):
                 order_data["order_date"] = request.POST["order_date"]
