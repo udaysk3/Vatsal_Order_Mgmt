@@ -120,35 +120,35 @@
 
 <div class="mb-3">
     <label for="material_used1" class="form-label">Material Used </label>
-    <input type="text" class="form-control mb-3" id="material_used1" name="material_used1">
-    <input type="text" class="form-control mb-3" id="material_used2" name="material_used2">
-    <input type="text" class="form-control mb-3" id="material_used3" name="material_used3">
-    <input type="text" class="form-control mb-3" id="material_used4" name="material_used4">
+    <input type="text" class="form-control mb-3" value="0.0" id="material_used1" name="material_used1">
+    <input type="text" class="form-control mb-3" value="0.0" id="material_used2" name="material_used2">
+    <input type="text" class="form-control mb-3"  value="0.0"id="material_used3" name="material_used3">
+    <input type="number" class="form-control mb-3" value="0.0" id="material_used4" name="material_used4">
 </div>
 
 <div class="mb-3">
     <label for="labour1" class="form-label">Labour </label>
-    <input type="text" class="form-control mb-3" id="labour1" name="labour1">
-    <input type="text" class="form-control mb-3" id="labour2" name="labour2">
-    <input type="text" class="form-control mb-3" id="labour3" name="labour3">
+    <input type="text" class="form-control mb-3" value="0.0" id="labour1" name="labour1">
+    <input type="text" class="form-control mb-3" value="0.0" id="labour2" name="labour2">
+    <input type="number" class="form-control mb-3" value="0.0" id="labour3" name="labour3">
 </div>
 
 
 <div class="mb-3">
     <label for="main_stone1" class="form-label">Main Stone Details</label>
-    <input type="text" class="form-control mb-3" id="main_stone1" name="main_stone1">
-    <input type="text" class="form-control mb-3" id="main_stone2" name="main_stone2">
-    <input type="text" class="form-control mb-3" id="main_stone3" name="main_stone3">
-    <input type="text" class="form-control mb-3" id="main_stone4" name="main_stone4">
+    <input type="text" class="form-control mb-3" value="0.0" id="main_stone1" name="main_stone1">
+    <input type="text" class="form-control mb-3" value="0.0" id="main_stone2" name="main_stone2">
+    <input type="text" class="form-control mb-3" value="0.0" id="main_stone3" name="main_stone3">
+    <input type="number" class="form-control mb-3" value="0.0" id="main_stone4" name="main_stone4">
 </div>
 
 
 <div class="mb-3">
     <label for="side_stone1" class="form-label">Side Stone Details</label>
-    <input type="text" class="form-control mb-3" id="side_stone1" name="side_stone1">
-    <input type="text" class="form-control mb-3" id="side_stone2" name="side_stone2">
-    <input type="text" class="form-control mb-3" id="side_stone3" name="side_stone3">
-    <input type="text" class="form-control mb-3" id="side_stone4" name="side_stone4">
+    <input type="text" class="form-control mb-3" value="0.0" id="side_stone1" name="side_stone1">
+    <input type="text" class="form-control mb-3" value="0.0" id="side_stone2" name="side_stone2">
+    <input type="text" class="form-control mb-3" value="0.0" id="side_stone3" name="side_stone3">
+    <input type="number" class="form-control mb-3" value="0.0" id="side_stone4" name="side_stone4">
 </div>
 
 
@@ -317,6 +317,7 @@
        
         {% endif %}
         
+    <a href="{% url "app:delete_order" item.id %}" class="btn btn-danger">Delete Order</a>
     <button type="submit" class="btn btn-primary">Update Order</button>
 </form>
 {% endif %}

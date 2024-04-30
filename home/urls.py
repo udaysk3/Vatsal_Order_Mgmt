@@ -10,6 +10,7 @@ urlpatterns = [
     path("adminview", views.Admin, name="admin"),
     path("new_order", views.newOrder, name="new_order"),
     path("edit_order/<str:id>", views.editOrder, name="edit_order"),
+    path("delete_order/<str:id>", views.deleteOrder, name="delete_order"),
     path("filterbyshop", views.filterByShop, name="filterbyshop"),
     path("assign_to_manufacturer", views.assign_to_manufacturer, name="assign_to_manufacturer"),
     path("completed_orders", views.completedOrders, name="completed_orders"),

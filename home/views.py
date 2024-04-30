@@ -39,10 +39,6 @@ def Admin(request):
 @login_required
 def newOrder(request):
     if request.method == "POST":
-        if request.POST.get('completed') == 'on':
-             request.POST['completed'] = True
-        else:
-             request.POST['completed'] = False
         try:
             order_data = {
                 'order_id': request.POST.get('order_id'),
@@ -56,37 +52,45 @@ def newOrder(request):
                 'color': request.POST.get('color'),
                 'size': request.POST.get('size'),
                 'personalization': request.POST.get('personalization'),
-                'last_date': request.POST.get('last_date'),
                 'main_stone1': request.POST.get('main_stone1'),
                 'main_stone2': request.POST.get('main_stone2'),
                 'main_stone3': request.POST.get('main_stone3'),
-                'main_stone4': request.POST.get('main_stone4'),
+                'main_stone4': request.POST.get('main_stone4', 0.0),
                 'side_stone1': request.POST.get('side_stone1'),
                 'side_stone2': request.POST.get('side_stone2'),
                 'side_stone3': request.POST.get('side_stone3'),
-                'side_stone4': request.POST.get('side_stone4'),
+                'side_stone4': request.POST.get('side_stone4', 0.0),
                 'material_used1': request.POST.get('material_used1'),
                 'material_used2': request.POST.get('material_used2'),
                 'material_used3': request.POST.get('material_used3'),
-                'material_used4': request.POST.get('material_used4'),
+                'material_used4': request.POST.get('material_used4', 0.0),
                 'labour1': request.POST.get('labour1'),
                 'labour2': request.POST.get('labour2'),
-                'labour3': request.POST.get('labour3'),
+                'labour3': request.POST.get('labour3', 0.0),
                 'delivery_cost': request.POST.get('delivery_cost', 0),
                 'packaging_cost': request.POST.get('packaging_cost', 0),
                 'total_cost': request.POST.get('total_cost', 0),
-                'original_delivery_date': request.POST.get('original_delivery_date'),
                 'customer_name': request.POST.get('customer_name'),
                 'fast_shipping': request.POST.get('fast_shipping', False),
                 'address': request.POST.get('address'),
                 'shop_name': request.POST.get('shop_name'),
                 'completed': request.POST.get('completed', False),
             }
+            print(request.POST)
+            if(request.POST["order_date"]):
+                order_data["order_date"] = request.POST["order_date"]
+                
+            if(request.POST["last_date"]):
+                order_data["last_date"] = request.POST["last_date"]
+                print("sdfdf")
+            if(request.POST["original_delivery_date"]):
+                order_data["original_delivery_date"] = request.POST["original_delivery_date"]
+            
             Item.objects.create(**order_data)
             messages.success(request, "Order created successfully")
             return redirect('/orders')
         except Exception as e:
-            messages.error(request, "An error occurred while creating the order")
+            messages.error(request, f"An error occurred while creating the order {e}")
             return render(request, "home/new_order.html")
     return render(request, "home/new_order.html")
 
@@ -127,7 +131,7 @@ def editOrder(request, id):
             order.labour3 = request.POST.get('labour3', order.getLabour3())
             order.delivery_cost = request.POST.get('delivery_cost', order.getDeliveryCost())
             order.packaging_cost = request.POST.get('packaging_cost', order.getPackagingCost())
-            order.total_cost = float(order.getMainStone4) + float(order.getSideStone4) + float(order.getMaterialUsed4) + float(order.getLabour3) + float(order.getPackagingCost()) + float(order.getDeliveryCost())
+            order.total_cost = float(order.getMainStone4()) + float(order.getSideStone4()) + float(order.getMaterialUsed4()) + float(order.getLabour3()) + float(order.getPackagingCost()) + float(order.getDeliveryCost())
             if request.POST.get('original_delivery_date'):
                 order.original_delivery_date = request.POST.get('original_delivery_date', order.getOriginalDeliveryDate())
             order.customer_name = request.POST.get('customer_name', order.getCustomerName())
@@ -249,3 +253,12 @@ def editshop(request, shop):
         return redirect("/dashboard")
     item = Item.objects.filter(shop_name = shop).first()
     return render(request, "home/editshop.html", {"revenue" : item.revenue , "shop" : shop})
+
+def deleteOrder(request, id):
+    try:
+        order = Item.objects.get(id=id)
+        order.delete()
+        messages.success(request, "Order deleted successfully")
+    except Exception as e:
+        messages.error(request, f"An error occurred while deleting the order {e}")
+    return redirect('/orders')

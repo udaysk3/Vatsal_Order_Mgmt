@@ -85,7 +85,7 @@ class Item(models.Model):
         return self.main_stone3 if self.main_stone3 else ''
     
     def getMainStone4(self):
-        return self.main_stone4 if self.main_stone4 else ''
+        return self.main_stone4 if self.main_stone4 else 0.0
     
     def getSideStone1(self):
         return self.side_stone1 if self.side_stone1 else ''
@@ -97,7 +97,7 @@ class Item(models.Model):
         return self.side_stone3 if self.side_stone3 else ''
     
     def getSideStone4(self):
-        return self.side_stone4 if self.side_stone4 else ''
+        return self.side_stone4 if self.side_stone4 else 0.0
     
     def getMaterialUsed1(self):
         return self.material_used1 if self.material_used1 else ''
@@ -109,7 +109,7 @@ class Item(models.Model):
         return self.material_used3 if self.material_used3 else ''
     
     def getMaterialUsed4(self):
-        return self.material_used4 if self.material_used4 else ''
+        return self.material_used4 if self.material_used4 else 0.0
     
     def getLabour1(self):
         return self.labour1 if self.labour1 else ''
@@ -118,7 +118,7 @@ class Item(models.Model):
         return self.labour2 if self.labour2 else ''
     
     def getLabour3(self):
-        return self.labour3 if self.labour3 else ''
+        return self.labour3 if self.labour3 else 0.0
     
     def getDeliveryCost(self):
         return self.delivery_cost if self.delivery_cost else 0
