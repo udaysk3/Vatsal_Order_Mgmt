@@ -323,10 +323,11 @@ No Orders Found
 <script>
 
   const tds = document.querySelectorAll('td');
-  const table = document.querySelector('.table_form');
   
   tds.forEach(td => {
     td.addEventListener('dblclick', () => {
+      const form = td.closest("table").nextSibling.nextSibling;
+      console.log(form)
       if (document.querySelector('.submit-btn')) {
   
       } else {
@@ -337,47 +338,51 @@ No Orders Found
         });
         const Submit = document.createElement('button');
         Submit.classList.add('btn', 'btn-primary', 'submit-btn', 'm-2','mb-4');
+        //Submit.setAttribute('type', "button");
+        //Submit.setAttribute('onclick', "editTable(this);");
         Submit.innerHTML = `Submit`;
-        table.insertAdjacentElement('beforeEnd', Submit);
+        form.insertAdjacentElement('beforeEnd', Submit);
       }
     });
   });
   
   function editTable(e) {
-    const material_used1 = document.querySelector('.material_used1');
-    const material_used2 = document.querySelector('.material_used2');
-    const material_used3 = document.querySelector('.material_used3');
-    const material_used4 = document.querySelector('.material_used4');
-    const labour1 = document.querySelector('.labour1');
-    const labour2 = document.querySelector('.labour2');
-    const labour3 = document.querySelector('.labour3');
-    const main_stone1 = document.querySelector('.main_stone1');
-    const main_stone2 = document.querySelector('.main_stone2');
-    const main_stone3 = document.querySelector('.main_stone3');
-    const main_stone4 = document.querySelector('.main_stone4');
-    const side_stone1 = document.querySelector('.side_stone1');
-    const side_stone2 = document.querySelector('.side_stone2');
-    const side_stone3 = document.querySelector('.side_stone3');
-    const side_stone4 = document.querySelector('.side_stone4');
-    const delivery_cost = document.querySelector('.delivery_cost');
-    const packaging_cost = document.querySelector('.packaging_cost');
-    const edit_material_used1 = document.querySelector('.edit_material_used1');
-    const edit_material_used2 = document.querySelector('.edit_material_used2');
-    const edit_material_used3 = document.querySelector('.edit_material_used3');
-    const edit_material_used4 = document.querySelector('.edit_material_used4');
-    const edit_labour1 = document.querySelector('.edit_labour1');
-    const edit_labour2 = document.querySelector('.edit_labour2');
-    const edit_labour3 = document.querySelector('.edit_labour3');
-    const edit_main_stone1 = document.querySelector('.edit_main_stone1');
-    const edit_main_stone2 = document.querySelector('.edit_main_stone2');
-    const edit_main_stone3 = document.querySelector('.edit_main_stone3');
-    const edit_main_stone4 = document.querySelector('.edit_main_stone4');
-    const edit_side_stone1 = document.querySelector('.edit_side_stone1');
-    const edit_side_stone2 = document.querySelector('.edit_side_stone2');
-    const edit_side_stone3 = document.querySelector('.edit_side_stone3');
-    const edit_side_stone4 = document.querySelector('.edit_side_stone4');
-    const edit_delivery_cost = document.querySelector('.edit_delivery_cost');
-    const edit_packaging_cost = document.querySelector('.edit_packaging_cost');
+    form = e;
+    table = e.previousSibling.previousSibling;
+    const material_used1 = form.querySelector('.material_used1');
+    const material_used2 = form.querySelector('.material_used2');
+    const material_used3 = form.querySelector('.material_used3');
+    const material_used4 = form.querySelector('.material_used4');
+    const labour1 = form.querySelector('.labour1');
+    const labour2 = form.querySelector('.labour2');
+    const labour3 = form.querySelector('.labour3');
+    const main_stone1 = form.querySelector('.main_stone1');
+    const main_stone2 = form.querySelector('.main_stone2');
+    const main_stone3 = form.querySelector('.main_stone3');
+    const main_stone4 = form.querySelector('.main_stone4');
+    const side_stone1 = form.querySelector('.side_stone1');
+    const side_stone2 = form.querySelector('.side_stone2');
+    const side_stone3 = form.querySelector('.side_stone3');
+    const side_stone4 = form.querySelector('.side_stone4');
+    const delivery_cost = form.querySelector('.delivery_cost');
+    const packaging_cost = form.querySelector('.packaging_cost');
+    const edit_material_used1 = table.querySelector('.edit_material_used1');
+    const edit_material_used2 = table.querySelector('.edit_material_used2');
+    const edit_material_used3 = table.querySelector('.edit_material_used3');
+    const edit_material_used4 = table.querySelector('.edit_material_used4');
+    const edit_labour1 = table.querySelector('.edit_labour1');
+    const edit_labour2 = table.querySelector('.edit_labour2');
+    const edit_labour3 = table.querySelector('.edit_labour3');
+    const edit_main_stone1 = table.querySelector('.edit_main_stone1');
+    const edit_main_stone2 = table.querySelector('.edit_main_stone2');
+    const edit_main_stone3 = table.querySelector('.edit_main_stone3');
+    const edit_main_stone4 = table.querySelector('.edit_main_stone4');
+    const edit_side_stone1 = table.querySelector('.edit_side_stone1');
+    const edit_side_stone2 = table.querySelector('.edit_side_stone2');
+    const edit_side_stone3 = table.querySelector('.edit_side_stone3');
+    const edit_side_stone4 = table.querySelector('.edit_side_stone4');
+    const edit_delivery_cost = table.querySelector('.edit_delivery_cost');
+    const edit_packaging_cost = table.querySelector('.edit_packaging_cost');
     material_used1.value = edit_material_used1.innerHTML;
     material_used2.value = edit_material_used2.innerHTML;
     material_used3.value = edit_material_used3.innerHTML;
@@ -396,6 +401,7 @@ No Orders Found
     delivery_cost.value = edit_delivery_cost.innerHTML;
     packaging_cost.value = edit_packaging_cost.innerHTML;
     e.submit();
+    //console.log(e)
   }
 </script>
 {% endblock %}
