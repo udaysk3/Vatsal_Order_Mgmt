@@ -39,7 +39,7 @@ class Item(models.Model):
     fast_shipping = models.BooleanField(default=False)
     address = models.CharField(max_length=100, blank = True, null= True)
     country = models.CharField(max_length=100, blank = True, null= True)
-    shop_name = models.CharField(max_length=100)
+    shop = models.ForeignKey('user.User', related_name =  'shop' ,on_delete=models.DO_NOTHING, blank = True, null= True)
     revenue = models.FloatField(default=0)
     completed = models.BooleanField(default=False)
     assigned_to = models.ForeignKey('user.User', on_delete=models.DO_NOTHING, blank = True, null= True)
@@ -108,13 +108,13 @@ class Item(models.Model):
         return self.side_stone4 if self.side_stone4 else 0.0
     
     def getMaterialUsed1(self):
-        return self.material_used1 if self.material_used1 else ''
+        return self.material_used1 if self.material_used1 else 0.0
     
     def getMaterialUsed2(self):
-        return self.material_used2 if self.material_used2 else ''
+        return self.material_used2 if self.material_used2 else 0.0
     
     def getMaterialUsed3(self):
-        return self.material_used3 if self.material_used3 else ''
+        return self.material_used3 if self.material_used3 else 0.0
     
     def getMaterialUsed4(self):
         return self.material_used4 if self.material_used4 else 0.0
@@ -158,12 +158,8 @@ class Item(models.Model):
     def getCountry(self):
         return self.country if self.country else ''
     
-    def getShopName(self):
-        return self.shop_name if self.shop_name else ''
-    
     def getCompleted(self):
         return self.completed if self.completed else False
-    
 
     
     def __str__(self):

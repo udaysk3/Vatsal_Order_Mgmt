@@ -75,6 +75,7 @@ tbody, tbody tr th{
                               <option value="employee">Employee</option>
                               <option value="manufacturer">Manufacturer</option>
                               <option value="admin">Admin</option>
+                              <option value="shop">Shop</option>
                             </select>
                             
                           </div>
@@ -95,13 +96,15 @@ tbody, tbody tr th{
                               <label for="editPassword" class="form-label">Password</label>
                               <input type="password"   class="form-control" id="password" name="password" >
                             </div>
-                            <div class="mb-3 form-check">
-                              <select class="form-select" name="user_type" id="user_type">
-                                <option value="employee"  {% if request.user.user_type == employee %} selected {% endif %} >Employee</option>
-                                <option value="manufacturer" {% if request.user.user_type == manufacturer %} selected {% endif %}>Manufacturer</option>
-                                <option value="admin" {% if request.user.user_type == admin %} selected {% endif %}>Admin</option>
-                              </select>
+                            <div class="mb-3">
                               <label class="form-check-label" for="user_type">User Type</label>
+                              <select class="form-select" name="user_type" id="user_type">
+                                <option value="employee"  {% if user.user_type == "employee" %} selected {% endif %} >Employee</option>
+                                <option value="manufacturer" {% if user.user_type == "manufacturer" %} selected {% endif %}>Manufacturer</option>
+                                <option value="admin" {% if user.user_type == "admin" %} selected {% endif %}>Admin</option>
+                                <option value="shop" {% if user.user_type == "shop" %} selected {% endif %}>Shop</option>
+                              </select>
+                             
                             </div>
                             <button type="submit" class="btn btn-primary">Update User</button>
                           </form>

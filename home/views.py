@@ -12,19 +12,16 @@ def home(request):
 
 
 @login_required
-def dashboard(request):
-    return render(request, "home/dashboard.html")
-
-
-@login_required
 def orders(request):
     if request.user.user_type == "manufacturer":
         orders = Item.objects.filter(assigned_to=request.user, completed=False)
+    elif request.user.user_type == "shop":
+        orders = Item.objects.filter(shop=request.user)
     else:
         orders = Item.objects.filter(completed=False)
     for i in orders:
         print(i.admin_photo.url)
-    shops = Item.objects.values('shop_name').distinct()
+    shops = User.objects.filter(user_type="shop")
     mans = User.objects.filter(user_type="manufacturer")
     return render(request, "home/orders.html", {"items": orders, "shops" : shops, "mans": mans})
 
@@ -78,8 +75,14 @@ def newOrder(request):
                 'customer_mobile': request.POST.get('customer_mobile'),
                 'address': request.POST.get('address'),
                 'country': request.POST.get('country'),
-                'shop_name': request.POST.get('shop_name'),
             }
+            try:
+                shop_id = request.POST.get('shop_id')
+                shop = User.objects.get(pk=shop_id, user_type="shop")
+                order_data['shop'] = shop
+            except Exception as e:
+                messages.error(request, f"An error occurred while getting the shop {e}")
+                return render(request, "home/new_order.html")
             if request.POST.get('fast_shipping') == 'on':
                 order_data['fast_shipping'] = True
             else:
@@ -109,6 +112,7 @@ def newOrder(request):
 @login_required
 def editOrder(request, id):
     order = Item.objects.get(pk=id)
+    shops = User.objects.filter(user_type="shop")
     if request.method == 'POST':
         try:
             order.order_id = request.POST.get('order_id', order.getOrderID())
@@ -127,21 +131,22 @@ def editOrder(request, id):
             order.personalization = request.POST.get('personalization', order.getPersonalization())
             if request.POST.get('last_date'):
                 order.last_date = request.POST.get('last_date', order.getLastDate())
-            order.main_stone1 = request.POST.get('main_stone1', order.getMainStone1())
-            order.main_stone2 = request.POST.get('main_stone2', order.getMainStone2())
-            order.main_stone3 = request.POST.get('main_stone3', order.getMainStone3())
-            order.main_stone4 = request.POST.get('main_stone4', order.getMainStone4())
-            order.side_stone1 = request.POST.get('side_stone1', order.getSideStone1())
-            order.side_stone2 = request.POST.get('side_stone2', order.getSideStone2())
-            order.side_stone3 = request.POST.get('side_stone3', order.getSideStone3())
-            order.side_stone4 = request.POST.get('side_stone4', order.getSideStone4())
-            order.material_used1 = request.POST.get('material_used1', order.getMaterialUsed1())
-            order.material_used2 = request.POST.get('material_used2', order.getMaterialUsed2())
-            order.material_used3 = request.POST.get('material_used3', order.getMaterialUsed3())
-            order.material_used4 = request.POST.get('material_used4', order.getMaterialUsed4())
-            order.labour1 = request.POST.get('labour1', order.getLabour1())
-            order.labour2 = request.POST.get('labour2', order.getLabour2())
-            order.labour3 = request.POST.get('labour3', order.getLabour3())
+            if request.POST.get('main_stone1') != "None":
+                order.main_stone1 = request.POST.get('main_stone1') if request.POST.get('main_stone1') != "None" else 0.0
+            order.main_stone2 = request.POST.get('main_stone2') if request.POST.get('main_stone2') != "None" else 0.0
+            order.main_stone3 = request.POST.get('main_stone3') if request.POST.get('main_stone3') != "None" else 0.0
+            order.main_stone4 = request.POST.get('main_stone4') if request.POST.get('main_stone3') != "None" else 0.0
+            order.side_stone1 = request.POST.get('side_stone1') if request.POST.get('side_stone1') != "None" else 0.0
+            order.side_stone2 = request.POST.get('side_stone2') if request.POST.get('side_stone1') != "None" else 0.0
+            order.side_stone3 = request.POST.get('side_stone3') if request.POST.get('side_stone1') != "None" else 0.0
+            order.side_stone4 = request.POST.get('side_stone4') if request.POST.get('side_stone1') != "None" else 0.0
+            order.material_used1 = request.POST.get('material_used1') if request.POST.get('material_used1') != "None" else 0.0
+            order.material_used2 = request.POST.get('material_used2') if request.POST.get('material_used1') != "None" else 0.0
+            order.material_used3 = request.POST.get('material_used3') if request.POST.get('material_used1') != "None" else 0.0
+            order.material_used4 = request.POST.get('material_used4') if request.POST.get('material_used1') != "None" else 0.0
+            order.labour1 = request.POST.get('labour1') if request.POST.get('labour1') != "None" else 0.0
+            order.labour2 = request.POST.get('labour2') if request.POST.get('labour1') != "None" else 0.0
+            order.labour3 = request.POST.get('labour3') if request.POST.get('labour1') != "None" else 0.0
             order.delivery_cost = request.POST.get('delivery_cost', order.getDeliveryCost())
             order.packaging_cost = request.POST.get('packaging_cost', order.getPackagingCost())
             order.total_cost = float(order.getMainStone4()) + float(order.getSideStone4()) + float(order.getMaterialUsed4()) + float(order.getLabour3()) + float(order.getPackagingCost()) + float(order.getDeliveryCost())
@@ -152,7 +157,7 @@ def editOrder(request, id):
             order.customer_mobile = request.POST.get('customer_mobile', order.getCustomerMobile())
             order.address = request.POST.get('address', order.getAddress())
             order.country = request.POST.get('country', order.getCountry())
-            order.shop_name = request.POST.get('shop_name', order.getShopName())
+            order.shop = User.objects.get(pk=request.POST.get('shop_id'))
             if request.POST.get('fast_shipping') == 'on':
                 order.fast_shipping = True
             else:
@@ -167,16 +172,16 @@ def editOrder(request, id):
         except Exception as e:
             messages.error(request, f"An error occurred while updating the order{e}")
             return render(request, 'home/new_order.html', {'item': order})
-    return render(request, 'home/new_order.html', {'item': order})
+    return render(request, 'home/new_order.html', {'item': order, "shops": shops})  # Render the same page with the form data
 
 def filterByShop(request):
-    shop_name = request.POST['shop_name']
+    shop_id = request.POST['shop_id']
     if request.user.user_type == "manufacturer":
-        orders = Item.objects.filter(assigned_to=request.user, shop_name=shop_name)
+        orders = Item.objects.filter(assigned_to=request.user, shop=shop_id)
     else:
-        orders = Item.objects.filter(shop_name=shop_name)
+        orders = Item.objects.filter(shop=shop_id)
     mans = User.objects.filter(user_type="manufacturer")
-    shops = Item.objects.values('shop_name').distinct()
+    shops = User.objects.filter(user_type="shop")
     return render(request, "home/orders.html", {"items": orders, "shops": shops, "mans": mans})
 
 def assign_to_manufacturer(request):
@@ -184,7 +189,7 @@ def assign_to_manufacturer(request):
         orders = Item.objects.filter(completed=False, assigned_to=request.user)
     else:
         orders = Item.objects.filter(completed=False)
-    shops = Item.objects.values('shop_name').distinct()
+    shops = User.objects.filter(user_type="shop")
     mans = User.objects.filter(user_type="manufacturer")
     if request.method == "GET":
         return render(request, "home/orders.html", {"items": orders, "shops": shops, "mans": mans})
@@ -201,7 +206,7 @@ def completedOrders(request):
         orders = Item.objects.filter(completed=True, assigned_to=request.user)
     else:
         orders = Item.objects.filter(completed=True)
-    shops = Item.objects.values('shop_name').distinct()
+    shops = User.objects.filter(user_type="shop")
     mans = User.objects.filter(user_type="manufacturer")
     return render(request, "home/orders.html", {"items": orders, "shops": shops, "mans": mans})
 
@@ -216,32 +221,33 @@ def markAsComplete(request,id):
         messages.error(request, f"An error occurred while marking the order as completed {e}")
     return redirect('/orders')
 
+@login_required
 def dashboard(request):
     if request.method == 'GET':
         total_orders = len(Item.objects.filter())
         completed_orders = len(Item.objects.filter(completed=True))
         new_orders = total_orders - completed_orders
-        shops = set(Item.objects.values_list('shop_name', flat=True))
+        shops = User.objects.filter(user_type="shop")
         total_revenue = 0.0
         shop_details = []
         revenue = 0.0
         for shop in shops:
             #print(shop)
             # Calculate total orders of the shop
-            total_shop_orders = Item.objects.filter(shop_name=shop).count()
+            total_shop_orders = Item.objects.filter(shop=shop.id).count()
             
             # Calculate completed orders of the shop
-            completed_orders = Item.objects.filter(shop_name=shop, completed=True).count()
+            completed_orders = Item.objects.filter(shop=shop.id, completed=True).count()
             
             # Calculate new orders of the shop (not completed)
             new_orders = total_shop_orders - completed_orders
             
             # Calculate total cost of the shop (sum of total cost of all orders)
-            total_cost = Item.objects.filter(shop_name=shop).aggregate(total_cost=Sum('total_cost'))['total_cost']
-            revenue =  Item.objects.filter(shop_name=shop).first().revenue
+            total_cost = Item.objects.filter(shop=shop.id).aggregate(total_cost=Sum('total_cost'))['total_cost']
+            revenue =  Item.objects.filter(shop=shop.id).first().revenue
 
             shop_details.append({
-                'shop_name': shop,
+                'shop': shop,
                 'total_orders': total_shop_orders,
                 'completed_orders': completed_orders,
                 'new_orders': new_orders,
@@ -252,22 +258,23 @@ def dashboard(request):
             #print(shop_details)
         return render(request, 'home/dashboard.html', {'shop_details': shop_details, 'total_orders' : total_orders, "new_orders" : new_orders, "completed_orders" : completed_orders, "revenue": revenue, "total_revenue": total_revenue})
     else:
-            shop_name = request.POST["shop_name"]
+            shop_id = request.POST["shop_id"]
             revenue = request.POST["revenue"]
-            item = Item.objects.filter(shop_name=shop_name).update(revenue=revenue)
+            item = Item.objects.filter(shop=shop_id).update(revenue=revenue)
             item.save()
             return redirect("/dashboard")  
         
-def editshop(request, shop):
+def editshop(request, shop_id):
     if request.method == "POST":
         try:
             revenue = request.POST["revenue"]
-            items = Item.objects.filter(shop_name = shop).update(revenue = revenue)    
+            items = Item.objects.filter(shop = shop_id).update(revenue = revenue)    
             messages.success(request, "Revenue Updated Successfully")
         except Exception as e:
             messages.error(request, "Error while Updating the revenue"+str(e))
         return redirect("/dashboard")
-    item = Item.objects.filter(shop_name = shop).first()
+    item = Item.objects.filter(shop = shop_id).first()
+    shop = User.objects.filter(id = shop_id).first()
     return render(request, "home/editshop.html", {"revenue" : item.revenue , "shop" : shop})
 
 def deleteOrder(request, id):

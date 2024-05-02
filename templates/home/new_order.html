@@ -148,8 +148,11 @@
 </div>
 
 <div class="mb-3">
-    <label for="shop_name" class="form-label">Shop Name</label>
-    <input type="text" class="form-control" id="shop_name" name="shop_name">
+    <label for="shop_id" class="form-label">Shop</label>
+    <select class="form-select" id="shop_id" name="shop_id">
+    {% for shop in shops  %}
+        <option value="{{ shop.id }}">{{ shop.name }}</option>
+    {% endfor %}
 </div>
 
 <div class="mb-3">
@@ -315,8 +318,11 @@
             <input type="text" class="form-control" id="country" name="country" value="{{ item.country }}">
         </div>
         <div class="mb-3">
-            <label for="shop_name" class="form-label">Shop Name</label>
-            <input type="text" class="form-control" id="shop_name" name="shop_name" value="{{ item.shop_name }}">
+            <label for="shop_id" class="form-label">Shop</label>
+            <select class="form-select" id="shop_id" name="shop_id">
+                {% for shop in shops  %}
+                <option value="{{ shop.id }}" {% if item.shop == shop.id %}selected{% endif %}>{{ shop.first_name }}{{ shop.last_name }}</option>
+                {% endfor %}
         </div>
         <div class="mb-3">
             <input class="form-check-input" type="checkbox" name="completed" id="completed" {% if item.completed %}checked{% endif %}>
@@ -371,7 +377,7 @@
         </div>
        
         {% endif %}
-    {% if not request.user.user_type =="manufacturer" %}
+    {% if not request.user.user_type == "manufacturer" %}
     <a href="{% url "app:delete_order" item.id %}" class="btn btn-danger">Delete Order</a>
     {% endif %}
     <button type="submit" class="btn btn-primary">Update Order</button>

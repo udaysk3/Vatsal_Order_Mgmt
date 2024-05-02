@@ -29,7 +29,7 @@ tbody, tbody tr th{
             
 {% if shop %}
   <h3>Update Revenue</h3>
-  <form id="editshop" method="post" enctype="multipart/form-data" action="{% url 'app:editshop' shop %}">
+  <form id="editshop" method="post" enctype="multipart/form-data" action="{% url 'app:editshop' shop.id %}">
     {% csrf_token %}
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}

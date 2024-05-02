@@ -100,10 +100,11 @@
           
             {% endif %}
             <div>
-
+              {% if not request.user.user_type == "shop" %}
                 <button type="button" class="btn btn-primary position-relative"  data-bs-toggle="modal" data-bs-target="#filterbyshop">
                   <i class="bi bi-filter"></i> Filter by Shop
                 </button>
+                {% endif %}
   
                 <!-- Modal -->
                 <div class="modal fade" id="filterbyshop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -147,13 +148,16 @@
    
   <div class="card pt-5">
       <div class="card-body pb-0" style="">
+        <span> <b>Status :</b> {{item.status}} </span> <br>
         <span> <b>Order ID :</b> {{item.order_id}} </span> <br>
         <span> <b>2nd Order ID :</b> {{item.order_id_2}} </span> <br>
         <span> <b>Order Date  :</b> {{item.order_date|date:"d-m-Y"}} </span> <br>
         {% if not item.completed and request.user.is_superuser %}
             <a  href="{% url "app:markascomplete" item.id %}" class="btn btn-success" style="position: absolute; left: 10px; top: 10px;">Mark as Complete</a>
             {% endif %}
+            {% if not request.user.user_type == "shop" %}
             <a href="{% url 'app:edit_order' item.id  %}" class="btn btn-warning" style="position: absolute; right: 10px; top: 10px;">Edit Order</a>
+            {% endif %}
             <div class="row mt-3">
               <div class="col-sm-2">
                   <div class="card" style="border: 1px solid #ff0">
@@ -262,7 +266,7 @@
                             <i class="bi bi-x-square" style="color:red;"></i>{% endif %} </p>
                           <p> <h5 class="card-title fs-3 " style="display:inline;"> Address : </h5> {{item.address}} </p>
                           <p> <h5 class="card-title fs-3 " style="display:inline;"> Country : </h5> {{item.country}} </p>
-                          <p class="mt-5"> <h5 class="card-title fs-3 " style="display:inline;"> Shop Name : </h5> {{item.shop_name}} </p>
+                          <p class="mt-5"> <h5 class="card-title fs-3 " style="display:inline;"> Shop Name : </h5> {{item.shop.first_name}} {{item.shop.last_name}} </p>
                           <p class="mt-5"> <h5 class="card-title fs-3 " style="display:inline;"> Assigned to : </h5> {{item.assigned_to.first_name}} {{item.assigned_to.last_name}} </p>
                     </div>
                   </div>
