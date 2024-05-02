@@ -107,7 +107,8 @@ def newOrder(request):
         except Exception as e:
             messages.error(request, f"An error occurred while creating the order {e}")
             return render(request, "home/new_order.html")
-    return render(request, "home/new_order.html")
+    shops = User.objects.filter(user_type="shop")
+    return render(request, "home/new_order.html", {"shops": shops})
 
 @login_required
 def editOrder(request, id):
@@ -285,3 +286,39 @@ def deleteOrder(request, id):
     except Exception as e:
         messages.error(request, f"An error occurred while deleting the order {e}")
     return redirect('/orders')
+
+
+
+@login_required
+def editTable(request, id):
+    order = Item.objects.get(pk=id)
+    if request.method == 'POST':
+        print(request.POST)
+        try:
+            order.main_stone1 = request.POST.get('main_stone1') if request.POST.get('main_stone1') != "None" else 0.0
+            order.main_stone2 = request.POST.get('main_stone2')  if request.POST.get('main_stone2') != "None" else 0.0
+            order.main_stone3 = request.POST.get('main_stone3') if request.POST.get('main_stone3') != "None" else 0.0
+            order.main_stone4 = request.POST.get('main_stone4')  if request.POST.get('main_stone4') != "None" else 0.0
+            order.side_stone1 = request.POST.get('side_stone1')  if request.POST.get('side_stone1') != "None" else 0.0
+            order.side_stone2 = request.POST.get('side_stone2')  if request.POST.get('side_stone2') != "None" else 0.0
+            order.side_stone3 = request.POST.get('side_stone3')  if request.POST.get('side_stone3') != "None" else 0.
+            order.side_stone4 = request.POST.get('side_stone4')   if request.POST.get('side_stone4') != "None" else 0.0
+            order.material_used1 = request.POST.get('material_used1')   if request.POST.get('material_used1') != "None" else 0.0
+            order.material_used2 = request.POST.get('material_used2')  if request.POST.get('material_used2') != "None" else 0.0
+            order.material_used3 = request.POST.get('material_used3')  if request.POST.get('material_used3') != "None" else 0.0
+            order.material_used4 = request.POST.get('material_used4')  if request.POST.get('material_used4') != "None" else 0.0
+            order.labour1 = request.POST.get('labour1')  if request.POST.get('labour1') != "None" else 0.0
+            order.labour2 = request.POST.get('labour2')  if request.POST.get('labour2') != "None" else 0.0
+            order.labour3 = request.POST.get('labour3')  if request.POST.get('labour3') != "None" else 0.0
+            order.delivery_cost = request.POST.get('delivery_cost') if request.POST.get('delivery_cost') != "None" else 0.0
+            order.packaging_cost = request.POST.get('packaging_cost') if request.POST.get('packaging_cost') != "None" else 0.0
+            order.total_cost = float(order.getMainStone4()) + float(order.getSideStone4()) + float(order.getMaterialUsed4()) + float(order.getLabour3()) + float(order.getPackagingCost()) + float(order.getDeliveryCost())
+
+            
+            order.save()
+            messages.success(request, "Order updated successfully")
+            return redirect('/orders')  # Redirect to home page or any other appropriate URL
+        except Exception as e:
+            messages.error(request, f"An error occurred while updating the order{e}")
+            return redirect('/orders')
+    return render(request, 'home/new_order.html', {'item': order})

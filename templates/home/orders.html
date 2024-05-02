@@ -118,11 +118,11 @@
                         {% csrf_token %}
                       <div class="modal-body">
                         <div class="mb-3">
-                            <label for="shop_name" class="form-label" >Shop Name</label>
-                            <select class="form-select" name="shop_name" id="shop_name" required>
+                            <label for="shop_id" class="form-label" >Shop Name</label>
+                            <select class="form-select" name="shop_id" id="shop_id" required>
                                 <option value="">Select Shop</option>
                                 {% for shop in shops %}
-                                <option value="{{shop.shop_name}}">{{shop.shop_name}}</option>
+                                <option value="{{shop.id}}">{{shop.first_name}} {{shop.last_name}}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -176,8 +176,19 @@
                       {% endif %}
                     </div>
                     <div class="card" style="border: 1px solid #ff0">
+                      
                       {% if item.manufacturer_photo %}
-                      <a href="{{item.manufacturer_photo.url}}" target="_blank"> <img src="{{item.manufacturer_photo.url}}" class="card-img-top" alt="Manufacturer Photo"></a>
+                      {% with url=item.manufacturer_photo.url|split:'.' %}
+                      
+                        <a href="{{ item.manufacturer_photo.url }}" target="_blank">
+                          {% if url.1 == 'png' %}
+                          <img src="{{item.manufacturer_photo.url}}" width="250px" class="card-img-top"  alt="Admin Photo">
+                          {% else %}
+                          <video src="{{item.manufacturer_photo.url}}" width="250px" class="object-fit-cover" autoplay></video>
+                          {% endif %}
+  
+                        </a>
+                      {% endwith %}
                         {% endif %}
                     </div>
               </div>
@@ -203,34 +214,34 @@
                             {% if not request.user.user_type == "manufacturer" %}
                               <tr><th>
                                   <h5 scope="row" class="card-title fs-3 " style="display:inline;">Main Stone</h5></th>
-                                  <td>{{item.main_stone1}}</td>
-                                    <td>{{item.main_stone2}}</td>
-                                    <td>{{item.main_stone3}}</td>
-                                    <td>{{item.main_stone4}}</td>
+                                  <td class="edit_main_stone1">{{item.main_stone1}}</td>
+                                  <td class="edit_main_stone2">{{item.main_stone2}}</td>
+                                  <td class="edit_main_stone3">{{item.main_stone3}}</td>
+                                  <td class="edit_main_stone4">{{item.main_stone4}}</td>
                               </tr>
                               <tr><th>
                                   <h5 scope="row" class="card-title fs-3 " style="display:inline;">Side Stone</h5></th>
-                                  <td>{{item.side_stone1}}</td>
-                                    <td>{{item.side_stone2}}</td>
-                                    <td>{{item.side_stone3}}</td>
-                                    <td>{{item.side_stone4}}</td>
+                                  <td class="edit_side_stone1">{{item.side_stone1}}</td>
+                                  <td class="edit_side_stone2">{{item.side_stone2}}</td>
+                                  <td class="edit_side_stone3">{{item.side_stone3}}</td>
+                                  <td class="edit_side_stone4">{{item.side_stone4}}</td>
                               </tr>
                               {% endif %}
                               {% if not request.user.user_type == "employee" %}
                               <tr><th>
                                   <h5 scope="row" class="card-title fs-3 " style="display:inline;">Material Used</h5></th>
-                                    <td>{{item.material_used1}}</td>
-                                        <td>{{item.material_used2}}</td>
-                                        <td>{{item.material_used3}}</td>
-                                        <td>{{item.material_used4}}</td>
+                                  <td class="edit_material_used1">{{item.material_used1}}</td>
+                                  <td class="edit_material_used2">{{item.material_used2}}</td>
+                                  <td class="edit_material_used3">{{item.material_used3}}</td>
+                                  <td class="edit_material_used4">{{item.material_used4}}</td>
                               </tr>
                               
                               <tr><th>
                                   <h5 scope="row" class="card-title fs-3 " style="display:inline;">Labour</h5></th>
                                   <td ></td>
-                                 <td>{{item.labour1}}</td>
-                                 <td>{{item.labour2}}</td>
-                                 <td>{{item.labour3}}</td>
+                                  <td class="edit_labour1">{{item.labour1}}</td>
+                                  <td class="edit_labour2">{{item.labour2}}</td>
+                                  <td class="edit_labour3">{{item.labour3}}</td>
                                 
                               </tr>
                               {% endif %}
@@ -238,11 +249,12 @@
                                 {% if not request.user.user_type == "manufacturer" %}
                                 <th>
                                   <h5 scope="row" class="card-title fs-3 " style="display:inline;">Delivery Cost</h5></th>
-                                  <td >{{item.delivery_cost}}</td>
+                                  
+                                  <td class="edit_delivery_cost" >{{item.delivery_cost}}</td>
                               </tr>
                               <tr><th>
                                   <h5 scope="row" class="card-title fs-3 " style="display:inline;">Packaging Cost</h5></th>
-                                  <td >{{item.packaging_cost}}</td>
+                                  <td class="edit_packaging_cost" >{{item.packaging_cost}}</td>
                                   <td ></td>
                                   {% endif %}
                                   {% if request.user.is_superuser %}
@@ -252,6 +264,26 @@
                               </tr>
                           </tbody>
                       </table>
+                      <form action="{% url 'app:edit_table' item.id %}" method="post" class="table_form" onsubmit="editTable(this)">
+                        {% csrf_token %}
+                        <input type="hidden" class="material_used1" name="material_used1">
+                        <input type="hidden" class="material_used2" name="material_used2">
+                        <input type="hidden" class="material_used3" name="material_used3">
+                        <input type="hidden" class="material_used4" name="material_used4">
+                        <input type="hidden" class="labour1" name="labour1">
+                        <input type="hidden" class="labour2" name="labour2">
+                        <input type="hidden" class="labour3" name="labour3">
+                        <input type="hidden" class="main_stone1" name="main_stone1">
+                        <input type="hidden" class="main_stone2" name="main_stone2">
+                        <input type="hidden" class="main_stone3" name="main_stone3">
+                        <input type="hidden" class="main_stone4" name="main_stone4">
+                        <input type="hidden" class="side_stone1" name="side_stone1">
+                        <input type="hidden" class="side_stone2" name="side_stone2">
+                        <input type="hidden" class="side_stone3" name="side_stone3">
+                        <input type="hidden" class="side_stone4" name="side_stone4">
+                        <input type="hidden" class="delivery_cost" name="delivery_cost">
+                        <input type="hidden" class="packaging_cost" name="packaging_cost">
+                      </form>
                   </div>
               </div>
               {% if not request.user.user_type == "manufacturer"  %}
@@ -285,4 +317,85 @@
 No Orders Found
 {% endif %}
 
+{% endblock %}
+{% block js %}
+
+<script>
+
+  const tds = document.querySelectorAll('td');
+  const table = document.querySelector('.table_form');
+  
+  tds.forEach(td => {
+    td.addEventListener('dblclick', () => {
+      if (document.querySelector('.submit-btn')) {
+  
+      } else {
+  
+  
+        tds.forEach(td => {
+            td.setAttribute('contenteditable', "true");
+        });
+        const Submit = document.createElement('button');
+        Submit.classList.add('btn', 'btn-primary', 'submit-btn', 'm-2','mb-4');
+        Submit.innerHTML = `Submit`;
+        table.insertAdjacentElement('beforeEnd', Submit);
+      }
+    });
+  });
+  
+  function editTable(e) {
+    const material_used1 = document.querySelector('.material_used1');
+    const material_used2 = document.querySelector('.material_used2');
+    const material_used3 = document.querySelector('.material_used3');
+    const material_used4 = document.querySelector('.material_used4');
+    const labour1 = document.querySelector('.labour1');
+    const labour2 = document.querySelector('.labour2');
+    const labour3 = document.querySelector('.labour3');
+    const main_stone1 = document.querySelector('.main_stone1');
+    const main_stone2 = document.querySelector('.main_stone2');
+    const main_stone3 = document.querySelector('.main_stone3');
+    const main_stone4 = document.querySelector('.main_stone4');
+    const side_stone1 = document.querySelector('.side_stone1');
+    const side_stone2 = document.querySelector('.side_stone2');
+    const side_stone3 = document.querySelector('.side_stone3');
+    const side_stone4 = document.querySelector('.side_stone4');
+    const delivery_cost = document.querySelector('.delivery_cost');
+    const packaging_cost = document.querySelector('.packaging_cost');
+    const edit_material_used1 = document.querySelector('.edit_material_used1');
+    const edit_material_used2 = document.querySelector('.edit_material_used2');
+    const edit_material_used3 = document.querySelector('.edit_material_used3');
+    const edit_material_used4 = document.querySelector('.edit_material_used4');
+    const edit_labour1 = document.querySelector('.edit_labour1');
+    const edit_labour2 = document.querySelector('.edit_labour2');
+    const edit_labour3 = document.querySelector('.edit_labour3');
+    const edit_main_stone1 = document.querySelector('.edit_main_stone1');
+    const edit_main_stone2 = document.querySelector('.edit_main_stone2');
+    const edit_main_stone3 = document.querySelector('.edit_main_stone3');
+    const edit_main_stone4 = document.querySelector('.edit_main_stone4');
+    const edit_side_stone1 = document.querySelector('.edit_side_stone1');
+    const edit_side_stone2 = document.querySelector('.edit_side_stone2');
+    const edit_side_stone3 = document.querySelector('.edit_side_stone3');
+    const edit_side_stone4 = document.querySelector('.edit_side_stone4');
+    const edit_delivery_cost = document.querySelector('.edit_delivery_cost');
+    const edit_packaging_cost = document.querySelector('.edit_packaging_cost');
+    material_used1.value = edit_material_used1.innerHTML;
+    material_used2.value = edit_material_used2.innerHTML;
+    material_used3.value = edit_material_used3.innerHTML;
+    material_used4.value = edit_material_used4.innerHTML;
+    labour1.value = edit_labour1.innerHTML;
+    labour2.value = edit_labour2.innerHTML;
+    labour3.value = edit_labour3.innerHTML;
+    main_stone1.value = edit_main_stone1.innerHTML;
+    main_stone2.value = edit_main_stone2.innerHTML;
+    main_stone3.value = edit_main_stone3.innerHTML;
+    main_stone4.value = edit_main_stone4.innerHTML;
+    side_stone1.value = edit_side_stone1.innerHTML;
+    side_stone2.value = edit_side_stone2.innerHTML;
+    side_stone3.value = edit_side_stone3.innerHTML;
+    side_stone4.value = edit_side_stone4.innerHTML;
+    delivery_cost.value = edit_delivery_cost.innerHTML;
+    packaging_cost.value = edit_packaging_cost.innerHTML;
+    e.submit();
+  }
+</script>
 {% endblock %}

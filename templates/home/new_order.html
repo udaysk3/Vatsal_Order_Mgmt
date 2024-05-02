@@ -142,18 +142,13 @@
     <input type="text" class="form-control" id="address" name="address">
 </div>
 
+
 <div class="mb-3">
     <label for="country" class="form-label">Country</label>
     <input type="text" class="form-control" id="country" name="country">
 </div>
 
-<div class="mb-3">
-    <label for="shop_id" class="form-label">Shop</label>
-    <select class="form-select" id="shop_id" name="shop_id">
-    {% for shop in shops  %}
-        <option value="{{ shop.id }}">{{ shop.name }}</option>
-    {% endfor %}
-</div>
+
 
 <div class="mb-3">
     <label for="manufacturer_photo" class="form-label">Manufacturer Photo</label>
@@ -203,6 +198,14 @@
 <div class="mb-3">
     <label for="packaging_cost" class="form-label">Packaging Cost</label>
     <input type="number" class="form-control" id="packaging_cost" name="packaging_cost" value="0">
+</div>
+
+<div class="mb-3">
+    <label for="shop_id" class="form-label">Shop</label>
+    <select class="form-select" id="shop_id" name="shop_id">
+    {% for shop in shops  %}
+        <option value="{{ shop.id }}">{{ shop.first_name }} {{ shop.last_name }}</option>
+    {% endfor %}
 </div>
 
 <div class="mb-3">
@@ -321,7 +324,7 @@
             <label for="shop_id" class="form-label">Shop</label>
             <select class="form-select" id="shop_id" name="shop_id">
                 {% for shop in shops  %}
-                <option value="{{ shop.id }}" {% if item.shop == shop.id %}selected{% endif %}>{{ shop.first_name }}{{ shop.last_name }}</option>
+                <option value="{{ shop.id }}" {% if item.shop == shop %}selected{% endif %}>{{ shop.first_name }}{{ shop.last_name }}</option>
                 {% endfor %}
         </div>
         <div class="mb-3">
