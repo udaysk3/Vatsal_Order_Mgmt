@@ -3,6 +3,7 @@ from django.db import models
 class Item(models.Model):
     order_id = models.CharField(max_length=100)
     order_id_2 = models.CharField(max_length=100)
+    status = models.CharField(max_length=100, blank = True, null= True)
     order_date = models.DateField()
     admin_photo = models.ImageField(upload_to='photos/%Y/%m/%d/', blank = True, null= True)
     manufacturer_photo = models.ImageField(upload_to='photos/%Y/%m/%d/', blank = True, null= True)
@@ -33,8 +34,11 @@ class Item(models.Model):
     total_cost = models.FloatField(default=0)
     original_delivery_date = models.DateField(blank = True, null= True)
     customer_name = models.CharField(max_length=100, blank = True, null= True)
+    customer_email = models.CharField(max_length=100, blank = True, null= True)
+    customer_mobile = models.CharField(max_length=100, blank = True, null= True)
     fast_shipping = models.BooleanField(default=False)
     address = models.CharField(max_length=100, blank = True, null= True)
+    country = models.CharField(max_length=100, blank = True, null= True)
     shop_name = models.CharField(max_length=100)
     revenue = models.FloatField(default=0)
     completed = models.BooleanField(default=False)
@@ -42,8 +46,12 @@ class Item(models.Model):
     
     def getOrderID(self):
         return self.order_id if self.order_id else ''
+    
     def get2OrderID(self):
         return self.order_id_2 if self.order_id_2 else ''
+    
+    def getStatus(self):
+        return self.status if self.status else ''
     
     def getOrderDate(self):
         return self.order_date if self.order_date else None
@@ -135,11 +143,20 @@ class Item(models.Model):
     def getCustomerName(self):
         return self.customer_name if self.customer_name else ''
     
+    def getCustomerEmail(self):
+        return self.customer_email if self.customer_email else ''
+    
+    def getCustomerMobile(self):
+        return self.customer_mobile if self.customer_mobile else ''
+    
     def getFastShipping(self):
         return self.fast_shipping if self.fast_shipping else False
     
     def getAddress(self):
         return self.address if self.address else ''
+    
+    def getCountry(self):
+        return self.country if self.country else ''
     
     def getShopName(self):
         return self.shop_name if self.shop_name else ''

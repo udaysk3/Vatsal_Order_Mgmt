@@ -37,7 +37,8 @@ class UserManager(BaseUserManager):
 USER_CHOICES = [
     ('employee', 'Employee'),
     ('manufacturer', 'Manufacturer'),
-    ('Admin', 'Admin'),
+    ('admin', 'Admin'),
+    ('shop', 'Shop'),
 ]
 class User(AbstractUser):
     username = None

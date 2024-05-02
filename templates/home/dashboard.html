@@ -1,6 +1,34 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block css %}
+<style>
+  .table>:not(caption)>*>*{
+  padding:5px;
+}
+a{
+      text-decoration: none;
+      color: black;
+  
+}
+
+@media (max-width:1200px){
+tbody, tbody tr th{
+    font-size: 9px !important;
+}
+.btn{
+  margin-bottom: 10px !important;
+}
+.table1 {
+  width: 300px !important;
+  overflow: auto !important;
+}
+}
+
+</style>
+
+{% endblock css %}
+
 {% block content %}
 
 <div class="container-fluid" style="max-width:1500px">
@@ -32,8 +60,8 @@
             
           </div>
           <div>
-
-<table class="table">
+<div class="table1">
+<table class="table" >
   <thead>
 <tr>
 <th>
@@ -75,6 +103,7 @@ Revenue <span id="arrow3"></span>
       {% endif %}
   </tbody>
 </table>
+</div>
 
 
 </div>

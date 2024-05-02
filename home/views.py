@@ -22,6 +22,8 @@ def orders(request):
         orders = Item.objects.filter(assigned_to=request.user, completed=False)
     else:
         orders = Item.objects.filter(completed=False)
+    for i in orders:
+        print(i.admin_photo.url)
     shops = Item.objects.values('shop_name').distinct()
     mans = User.objects.filter(user_type="manufacturer")
     return render(request, "home/orders.html", {"items": orders, "shops" : shops, "mans": mans})
@@ -43,6 +45,7 @@ def newOrder(request):
             order_data = {
                 'order_id': request.POST.get('order_id'),
                 'order_id_2': request.POST.get('order_id_2'),
+                'status': request.POST.get('status'),
                 'order_date': request.POST.get('order_date'),
                 'admin_photo': request.FILES.get('admin_photo'),
                 'manufacturer_photo': request.FILES.get('manufacturer_photo'),
@@ -71,7 +74,10 @@ def newOrder(request):
                 'packaging_cost': request.POST.get('packaging_cost', 0),
                 'total_cost': request.POST.get('total_cost', 0),
                 'customer_name': request.POST.get('customer_name'),
+                'customer_email': request.POST.get('customer_email'),
+                'customer_mobile': request.POST.get('customer_mobile'),
                 'address': request.POST.get('address'),
+                'country': request.POST.get('country'),
                 'shop_name': request.POST.get('shop_name'),
             }
             if request.POST.get('fast_shipping') == 'on':
@@ -107,6 +113,7 @@ def editOrder(request, id):
         try:
             order.order_id = request.POST.get('order_id', order.getOrderID())
             order.order_id_2 = request.POST.get('order_id_2', order.get2OrderID())
+            order.status = request.POST.get('status', order.getStatus())
             order.order_date = request.POST.get('order_date', order.getOrderDate())
             if request.FILES.get('admin_photo'):
                 order.admin_photo = request.FILES.get('admin_photo')
@@ -141,7 +148,10 @@ def editOrder(request, id):
             if request.POST.get('original_delivery_date'):
                 order.original_delivery_date = request.POST.get('original_delivery_date', order.getOriginalDeliveryDate())
             order.customer_name = request.POST.get('customer_name', order.getCustomerName())
+            order.customer_email = request.POST.get('customer_email', order.getCustomerEmail())
+            order.customer_mobile = request.POST.get('customer_mobile', order.getCustomerMobile())
             order.address = request.POST.get('address', order.getAddress())
+            order.country = request.POST.get('country', order.getCountry())
             order.shop_name = request.POST.get('shop_name', order.getShopName())
             if request.POST.get('fast_shipping') == 'on':
                 order.fast_shipping = True

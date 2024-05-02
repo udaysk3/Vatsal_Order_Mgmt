@@ -1,5 +1,24 @@
 {% extends "base.html" %}
+<style>
+  .table>:not(caption)>*>*{
+  padding:5px;
+}
+a{
+      text-decoration: none;
+      color: black;
+  
+}
 
+@media (max-width:1200px){
+tbody, tbody tr th{
+    font-size: 9px !important;
+}
+.btn{
+  margin-bottom: 10px !important;
+}
+}
+
+</style>
 {% block content %}
 <div class="container-fluid" style="max-width:1500px">
     <!-- Row 1 -->

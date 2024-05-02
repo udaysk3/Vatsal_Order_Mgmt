@@ -1,4 +1,5 @@
-{% extends 'base.html' %} {% load static %} {% block css %}
+{% extends 'base.html' %} {% load static %} {% load custom %} {% block css %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}" />
 
 <style>
     .table>:not(caption)>*>*{
@@ -9,6 +10,16 @@
         color: black;
     
  }
+
+ @media (max-width:1200px){
+  tbody, tbody tr th{
+      font-size: 9px !important;
+  }
+  .btn{
+    margin-bottom: 10px !important;
+    margin-right: -5px !important;
+  }
+}
 
 </style>
 
@@ -135,7 +146,7 @@
 <div class="">
    
   <div class="card pt-5">
-      <div class="card-body" style="">
+      <div class="card-body pb-0" style="">
         <span> <b>Order ID :</b> {{item.order_id}} </span> <br>
         <span> <b>2nd Order ID :</b> {{item.order_id_2}} </span> <br>
         <span> <b>Order Date  :</b> {{item.order_date|date:"d-m-Y"}} </span> <br>
@@ -147,7 +158,17 @@
               <div class="col-sm-2">
                   <div class="card" style="border: 1px solid #ff0">
                     {% if item.admin_photo %}
-                      <a href="{{item.admin_photo.url}}" target="_blank"><img src="{{item.admin_photo.url}}" width="250px" class="card-img-top"  alt="Admin Photo"></a>
+                    {% with url=item.admin_photo.url|split:'.' %}
+                    
+                      <a href="{{ item.admin_photo.url }}" target="_blank">
+                        {% if url.1 == 'png' %}
+                        <img src="{{item.admin_photo.url}}" width="250px" class="card-img-top"  alt="Admin Photo">
+                        {% else %}
+                        <video src="{{item.admin_photo.url}}" width="250px" class="object-fit-cover" autoplay></video>
+                        {% endif %}
+
+                      </a>
+                    {% endwith %}
                       {% endif %}
                     </div>
                     <div class="card" style="border: 1px solid #ff0">
@@ -158,16 +179,16 @@
               </div>
               <div class="col-sm-3">
                   <div class="card">
-                      <div class="card-body">
+                      <div class="card-body pt-2 py-0">
                           <h5 class="card-title">Item Details</h5>
-                          <p> <b> Title : </b> {{item.title}} </p>
-                          <p> <b> Quantity : </b> {{item.quantity}} </p>
-                            <p> <b> Material : </b> {{item.material}} </p>
-                            <p> <b> Color : </b> {{item.color}} </p>
-                            <p> <b> Size : </b> {{item.size}} </p>
-                            <p> <b> Personalization : </b> {{item.personalization}} </p>
-                            <p> <b> Order Date : </b> {{item.order_date|date:"d-m-Y"}} </p>
-                            <p> <b> Last Date : </b> {{item.last_date|date:"d-m-Y"}} </p>
+                          <p class=" fs-4 "> <h5 class="card-title fs-4 " style="display:inline;"> Title : </h5> {{item.title}} </p>
+                          <p class=" fs-4 "> <h5 class="card-title fs-4 " style="display:inline;"> Quantity : </h5> {{item.quantity}} </p>
+                            <p class=" fs-4 "> <h5 class="card-title fs-4 " style="display:inline;"> Material : </h5> {{item.material}} </p>
+                            <p class=" fs-4 "> <h5 class="card-title fs-4 " style="display:inline;"> Color : </h5> {{item.color}} </p>
+                            <p class=" fs-4 "> <h5 class="card-title fs-4 " style="display:inline;"> Size : </h5> {{item.size}} </p>
+                            <p class=" fs-4 "> <h5 class="card-title fs-4 " style="display:inline;"> Personalization : </h5> {{item.personalization}} </p>
+                            <p class=" fs-4 "> <h5 class="card-title fs-4 " style="display:inline;"> Order Date : </h5> {{item.order_date|date:"d-m-Y"}} </p>
+                            <p class=" fs-4 "> <h5 class="card-title fs-4 " style="display:inline;"> Last Date : </h5> {{item.last_date|date:"d-m-Y"}} </p>
                       </div>
                   </div>
               </div>
@@ -176,15 +197,15 @@
                       <table class="table table-bordered" >
                           <tbody>
                             {% if not request.user.user_type == "manufacturer" %}
-                              <tr>
-                                  <th scope="row">Main Stone</th>
+                              <tr><th>
+                                  <h5 scope="row" class="card-title fs-3 " style="display:inline;">Main Stone</h5></th>
                                   <td>{{item.main_stone1}}</td>
                                     <td>{{item.main_stone2}}</td>
                                     <td>{{item.main_stone3}}</td>
                                     <td>{{item.main_stone4}}</td>
                               </tr>
-                              <tr>
-                                  <th scope="row">Side Stone</th>
+                              <tr><th>
+                                  <h5 scope="row" class="card-title fs-3 " style="display:inline;">Side Stone</h5></th>
                                   <td>{{item.side_stone1}}</td>
                                     <td>{{item.side_stone2}}</td>
                                     <td>{{item.side_stone3}}</td>
@@ -192,16 +213,16 @@
                               </tr>
                               {% endif %}
                               {% if not request.user.user_type == "employee" %}
-                              <tr>
-                                  <th scope="row">Material Used</th>
+                              <tr><th>
+                                  <h5 scope="row" class="card-title fs-3 " style="display:inline;">Material Used</h5></th>
                                     <td>{{item.material_used1}}</td>
                                         <td>{{item.material_used2}}</td>
                                         <td>{{item.material_used3}}</td>
                                         <td>{{item.material_used4}}</td>
                               </tr>
                               
-                              <tr>
-                                  <th scope="row">Labour</th>
+                              <tr><th>
+                                  <h5 scope="row" class="card-title fs-3 " style="display:inline;">Labour</h5></th>
                                   <td ></td>
                                  <td>{{item.labour1}}</td>
                                  <td>{{item.labour2}}</td>
@@ -210,13 +231,16 @@
                               </tr>
                               {% endif %}
                               <tr>
-                                  <th scope="row">Delivery Cost</th>
+                                {% if not request.user.user_type == "manufacturer" %}
+                                <th>
+                                  <h5 scope="row" class="card-title fs-3 " style="display:inline;">Delivery Cost</h5></th>
                                   <td >{{item.delivery_cost}}</td>
                               </tr>
-                              <tr>
-                                  <th scope="row">Packaging Cost</th>
+                              <tr><th>
+                                  <h5 scope="row" class="card-title fs-3 " style="display:inline;">Packaging Cost</h5></th>
                                   <td >{{item.packaging_cost}}</td>
                                   <td ></td>
+                                  {% endif %}
                                   {% if request.user.is_superuser %}
                                   <th >Total</th>
                                   <td >{{item.total_cost}}</td>
@@ -229,13 +253,17 @@
               {% if not request.user.user_type == "manufacturer"  %}
               <div class="col-sm-3">
                   <div class="card">
-                    <div class="card-body">
-                        <p> <b> Original Delivery Date : </b> {{item.original_delivery_date|date:"d-m-Y" }} </p>
-                        <p> <b> Customer Name : </b> {{item.customer_name}} </p>
-                          <p> <b> Fast Shipping : </b> {{item.fast_shipping}} </p>
-                          <p> <b> Address : </b> {{item.address}} </p>
-                          <p class="mt-5"> <b> Shop Name : </b> {{item.shop_name}} </p>
-                          <p class="mt-5"> <b> Assigned to : </b> {{item.assigned_to.first_name}} {{item.assigned_to.last_name}} </p>
+                    <div class="card-body pt-2 py-0">
+                        <p> <h5 class="card-title fs-3 " style="display:inline;"> Original Delivery Date : </h5> {{item.original_delivery_date|date:"d-m-Y" }} </p>
+                        <p> <h5 class="card-title fs-3 " style="display:inline;"> Customer Name : </h5> {{item.customer_name}} </p>
+                          <p> <h5 class="card-title fs-3 " style="display:inline;"> Fast Shipping : </h5> {% if item.fast_shipping %}
+                            <i class="bi bi-check-square" style="color:green;"></i>
+                            {% else %}
+                            <i class="bi bi-x-square" style="color:red;"></i>{% endif %} </p>
+                          <p> <h5 class="card-title fs-3 " style="display:inline;"> Address : </h5> {{item.address}} </p>
+                          <p> <h5 class="card-title fs-3 " style="display:inline;"> Country : </h5> {{item.country}} </p>
+                          <p class="mt-5"> <h5 class="card-title fs-3 " style="display:inline;"> Shop Name : </h5> {{item.shop_name}} </p>
+                          <p class="mt-5"> <h5 class="card-title fs-3 " style="display:inline;"> Assigned to : </h5> {{item.assigned_to.first_name}} {{item.assigned_to.last_name}} </p>
                     </div>
                   </div>
               </div>
