@@ -157,7 +157,13 @@
 
 <div class="mb-3">
     <label for="material_used1" class="form-label">Material Used </label>
-    <input type="text" class="form-control mb-3" value="" id="material_used1" name="material_used1">
+    <select class="form-select mb-3 material_used1" name="material_used1">
+        <option value="Gold">Gold</option>
+        <option value="Silver">Silver</option>
+        <option value="Platinum">Platinum</option>
+        <option value="Other">Other</option>
+    </select>
+
     <input type="text" class="form-control mb-3" value="" id="material_used2" name="material_used2">
     <input type="text" class="form-control mb-3"  value=""id="material_used3" name="material_used3">
     <input type="number" class="form-control mb-3" value="0.0" id="material_used4" name="material_used4">
@@ -398,5 +404,26 @@
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+  <script>
+    const material_used1 = document.querySelector('.material_used1');
+    material_used1.addEventListener('change', (e) => {
+        if (e.target.value === 'Other') {
+            const input = document.createElement('input');
+            input.classList.add('form-control','mb-3', 'other');
+            input.setAttribute('type', 'text');
+            input.setAttribute('name', 'material_used1');
+            material_used1.removeAttribute('name');
+            material_used1.parentNode.insertBefore(input, material_used1.nextSibling);
+
+        } else {
+            const other = document.querySelector('.other');
+            if (other) {
+                other.remove();
+                material_used1.setAttribute('name', 'material_used1');
+            }
+        }
+    });
+  </script>
 
   {% endblock js %}

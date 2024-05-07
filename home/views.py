@@ -19,8 +19,7 @@ def orders(request):
         orders = Item.objects.filter(shop=request.user)
     else:
         orders = Item.objects.filter(completed=False)
-    for i in orders:
-        print(i.admin_photo.url)
+    
     shops = User.objects.filter(user_type="shop")
     mans = User.objects.filter(user_type="manufacturer")
     return render(request, "home/orders.html", {"items": orders, "shops" : shops, "mans": mans})
@@ -148,6 +147,7 @@ def editOrder(request, id):
             order.labour1 = request.POST.get('labour1') if request.POST.get('labour1') != "None" else 0.0
             order.labour2 = request.POST.get('labour2') if request.POST.get('labour1') != "None" else 0.0
             order.labour3 = request.POST.get('labour3') if request.POST.get('labour1') != "None" else 0.0
+            print(request.POST.get('delivery_cost', order.getDeliveryCost()))
             order.delivery_cost = request.POST.get('delivery_cost', order.getDeliveryCost())
             order.packaging_cost = request.POST.get('packaging_cost', order.getPackagingCost())
             order.total_cost = float(order.getMainStone4()) + float(order.getSideStone4()) + float(order.getMaterialUsed4()) + float(order.getLabour3()) + float(order.getPackagingCost()) + float(order.getDeliveryCost())
@@ -301,7 +301,6 @@ def deleteOrder(request, id):
 def editTable(request, id):
     order = Item.objects.get(pk=id)
     if request.method == 'POST':
-        print(request.POST)
         try:
             order.main_stone1 = request.POST.get('main_stone1') if request.POST.get('main_stone1') != "" else ""
             order.main_stone2 = request.POST.get('main_stone2')  if request.POST.get('main_stone2') != "" else ""
@@ -318,6 +317,7 @@ def editTable(request, id):
             order.labour1 = request.POST.get('labour1')  if request.POST.get('labour1') != "" else ""
             order.labour2 = request.POST.get('labour2')  if request.POST.get('labour2') != "" else ""
             order.labour3 = request.POST.get('labour3')  if request.POST.get('labour3') != "None" else 0.0
+            print('qwertyuioqwertyuiqwertyu',request.POST.get('delivery_cost'))
             order.delivery_cost = request.POST.get('delivery_cost') if request.POST.get('delivery_cost') != "" else 0.0
             order.packaging_cost = request.POST.get('packaging_cost') if request.POST.get('packaging_cost') != "" else 0.0
             order.optiona1 = request.POST.get('optiona1') if request.POST.get('optiona1') != "None" else ""
