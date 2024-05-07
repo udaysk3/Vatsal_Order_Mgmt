@@ -8,6 +8,7 @@ urlpatterns = [
     path("dashboard", views.dashboard),
     path("orders", views.orders, name="orders"),
     path("adminview", views.Admin, name="admin"),
+    path("gold", views.Gold, name="gold"),
     path("new_order", views.newOrder, name="new_order"),
     path("edit_order/<str:id>", views.editOrder, name="edit_order"),
      path("edit_table/<str:id>", views.editTable, name="edit_table"),
@@ -17,5 +18,5 @@ urlpatterns = [
     path("completed_orders", views.completedOrders, name="completed_orders"),
     path("markascomplete/<str:id>", views.markAsComplete, name="markascomplete"),
     path("dashboard", views.dashboard, name="dashboard"),
-    path("editshop/<str:shop>", views.editshop, name="editshop")
+    path("editshop/<str:shop_id>", views.editshop, name="editshop")
     ]

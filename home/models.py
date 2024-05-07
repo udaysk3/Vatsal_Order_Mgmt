@@ -29,6 +29,19 @@ class Item(models.Model):
     labour1 = models.CharField(max_length=100, blank = True, null= True)
     labour2 = models.CharField(max_length=100, blank = True, null= True)
     labour3 = models.FloatField(default=0)
+    optiona1 = models.CharField(max_length=100, blank = True, null= True)
+    optional2 = models.CharField(max_length=100, blank = True, null= True)
+    optional3 = models.CharField(max_length=100, blank = True, null= True)
+    optional4 = models.CharField(max_length=100, blank = True, null= True)
+    optional5 = models.CharField(max_length=100, blank = True, null= True)
+    optional6 = models.CharField(max_length=100, blank = True, null= True)
+    optional7 = models.CharField(max_length=100, blank = True, null= True)
+    optional8 = models.CharField(max_length=100, blank = True, null= True)
+    optional9 = models.CharField(max_length=100, blank = True, null= True)
+    optional10 = models.CharField(max_length=100, blank = True, null= True)
+    mainsidesum = models.FloatField(default=0)
+    materiallaboursum = models.FloatField(default=0)
+    deliverypackagesum = models.FloatField(default=0)
     delivery_cost = models.FloatField(default=0)
     packaging_cost = models.FloatField(default=0)
     total_cost = models.FloatField(default=0)
@@ -43,6 +56,7 @@ class Item(models.Model):
     revenue = models.FloatField(default=0)
     completed = models.BooleanField(default=False)
     assigned_to = models.ForeignKey('user.User', on_delete=models.DO_NOTHING, blank = True, null= True)
+    
     
     def getOrderID(self):
         return self.order_id if self.order_id else ''
@@ -164,3 +178,10 @@ class Item(models.Model):
     
     def __str__(self):
         return str(self.title) + '-' + self.order_id
+    
+class Topup(models.Model):
+    manufacturer = models.ForeignKey('user.User', on_delete=models.CASCADE)
+    date = models.DateField(auto_now_add=True)
+    gold = models.FloatField(default=0)
+    def __str__(self):
+        return str(self.manufacturer.email)

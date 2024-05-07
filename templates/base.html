@@ -74,6 +74,14 @@
                 <span class="hide-menu">Admin</span>
               </a>
             </li>
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="{% url "app:gold" %}" aria-expanded="false">
+                <span>
+                  <i class="ti ti-users"></i>
+                </span>
+                <span class="hide-menu">Gold</span>
+              </a>
+            </li>
             {% endif %}
             {% if request.user.finance %}
             <li class="sidebar-item">

@@ -49,3 +49,4 @@ class User(AbstractUser):
     user_type = models.CharField(max_length=100, choices=USER_CHOICES, default='employee')
     
     objects = UserManager()
+    

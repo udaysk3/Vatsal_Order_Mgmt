@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from user.models import User
-from .models import Item
+from .models import Item, Topup
 from django.contrib import messages
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Q
 # Create your views here.
 
 
@@ -245,7 +245,11 @@ def dashboard(request):
             
             # Calculate total cost of the shop (sum of total cost of all orders)
             total_cost = Item.objects.filter(shop=shop.id).aggregate(total_cost=Sum('total_cost'))['total_cost']
-            revenue =  Item.objects.filter(shop=shop.id).first().revenue
+            obj =  Item.objects.filter(shop=shop.id).first()
+            if obj:
+                revenue = obj.revenue
+            else:
+                revenue = 0.0
 
             shop_details.append({
                 'shop': shop,
@@ -275,8 +279,12 @@ def editshop(request, shop_id):
             messages.error(request, "Error while Updating the revenue"+str(e))
         return redirect("/dashboard")
     item = Item.objects.filter(shop = shop_id).first()
+    if item:
+        revenue = item.revenue
+    else:
+        revenue = 0.0
     shop = User.objects.filter(id = shop_id).first()
-    return render(request, "home/editshop.html", {"revenue" : item.revenue , "shop" : shop})
+    return render(request, "home/editshop.html", {"revenue" : revenue , "shop" : shop})
 
 def deleteOrder(request, id):
     try:
@@ -295,26 +303,37 @@ def editTable(request, id):
     if request.method == 'POST':
         print(request.POST)
         try:
-            order.main_stone1 = request.POST.get('main_stone1') if request.POST.get('main_stone1') != "None" else 0.0
-            order.main_stone2 = request.POST.get('main_stone2')  if request.POST.get('main_stone2') != "None" else 0.0
-            order.main_stone3 = request.POST.get('main_stone3') if request.POST.get('main_stone3') != "None" else 0.0
+            order.main_stone1 = request.POST.get('main_stone1') if request.POST.get('main_stone1') != "" else ""
+            order.main_stone2 = request.POST.get('main_stone2')  if request.POST.get('main_stone2') != "" else ""
+            order.main_stone3 = request.POST.get('main_stone3') if request.POST.get('main_stone3') != "" else ""
             order.main_stone4 = request.POST.get('main_stone4')  if request.POST.get('main_stone4') != "None" else 0.0
-            order.side_stone1 = request.POST.get('side_stone1')  if request.POST.get('side_stone1') != "None" else 0.0
-            order.side_stone2 = request.POST.get('side_stone2')  if request.POST.get('side_stone2') != "None" else 0.0
-            order.side_stone3 = request.POST.get('side_stone3')  if request.POST.get('side_stone3') != "None" else 0.
+            order.side_stone1 = request.POST.get('side_stone1')  if request.POST.get('side_stone1') != "" else ""
+            order.side_stone2 = request.POST.get('side_stone2')  if request.POST.get('side_stone2') != "" else ""
+            order.side_stone3 = request.POST.get('side_stone3')  if request.POST.get('side_stone3') != "" else ""
             order.side_stone4 = request.POST.get('side_stone4')   if request.POST.get('side_stone4') != "None" else 0.0
-            order.material_used1 = request.POST.get('material_used1')   if request.POST.get('material_used1') != "None" else 0.0
-            order.material_used2 = request.POST.get('material_used2')  if request.POST.get('material_used2') != "None" else 0.0
-            order.material_used3 = request.POST.get('material_used3')  if request.POST.get('material_used3') != "None" else 0.0
+            order.material_used1 = request.POST.get('material_used1')   if request.POST.get('material_used1') != "" else ""
+            order.material_used2 = request.POST.get('material_used2')  if request.POST.get('material_used2') != "" else ""
+            order.material_used3 = request.POST.get('material_used3')  if request.POST.get('material_used3') != "" else ""
             order.material_used4 = request.POST.get('material_used4')  if request.POST.get('material_used4') != "None" else 0.0
-            order.labour1 = request.POST.get('labour1')  if request.POST.get('labour1') != "None" else 0.0
-            order.labour2 = request.POST.get('labour2')  if request.POST.get('labour2') != "None" else 0.0
+            order.labour1 = request.POST.get('labour1')  if request.POST.get('labour1') != "" else ""
+            order.labour2 = request.POST.get('labour2')  if request.POST.get('labour2') != "" else ""
             order.labour3 = request.POST.get('labour3')  if request.POST.get('labour3') != "None" else 0.0
-            order.delivery_cost = request.POST.get('delivery_cost') if request.POST.get('delivery_cost') != "None" else 0.0
-            order.packaging_cost = request.POST.get('packaging_cost') if request.POST.get('packaging_cost') != "None" else 0.0
+            order.delivery_cost = request.POST.get('delivery_cost') if request.POST.get('delivery_cost') != "" else 0.0
+            order.packaging_cost = request.POST.get('packaging_cost') if request.POST.get('packaging_cost') != "" else 0.0
+            order.optiona1 = request.POST.get('optiona1') if request.POST.get('optiona1') != "None" else ""
+            order.optional2 = request.POST.get('optional2') if request.POST.get('optional2') != "None" else ""
+            order.optional3 = request.POST.get('optional3') if request.POST.get('optional3') != "None" else ""
+            order.optional4 = request.POST.get('optional4') if request.POST.get('optional4') != "None" else ""
+            order.optional5 = request.POST.get('optional5') if request.POST.get('optional5') != "None" else ""
+            order.optional6 = request.POST.get('optional6') if request.POST.get('optional6') != "None" else ""
+            order.optional7 = request.POST.get('optional7') if request.POST.get('optional7') != "None" else ""
+            order.optional8 = request.POST.get('optional8') if request.POST.get('optional8') != "None" else ""
+            order.optional9 = request.POST.get('optional9') if request.POST.get('optional9') != "None" else ""
+            order.optional10 = request.POST.get('optional10') if request.POST.get('optional10') != "None" else ""
+            order.mainsidesum = float(order.getMainStone4()) + float(order.getSideStone4())
+            order.materiallaboursum = float(order.getMaterialUsed4()) + float(order.getLabour3())
+            order.deliverypackagesum = float(order.getDeliveryCost()) + float(order.getPackagingCost())
             order.total_cost = float(order.getMainStone4()) + float(order.getSideStone4()) + float(order.getMaterialUsed4()) + float(order.getLabour3()) + float(order.getPackagingCost()) + float(order.getDeliveryCost())
-
-            
             order.save()
             messages.success(request, "Order updated successfully")
             return redirect('/orders')  # Redirect to home page or any other appropriate URL
@@ -322,3 +341,48 @@ def editTable(request, id):
             messages.error(request, f"An error occurred while updating the order{e}")
             return redirect('/orders')
     return render(request, 'home/new_order.html', {'item': order})
+
+
+def Gold(request):
+    if request.method == "POST":
+        try:
+            manufacturer = request.POST.get("manufacturer")
+            gold = request.POST.get("gold")
+            Topup.objects.create(manufacturer=User.objects.get(pk=manufacturer), gold=gold)
+            messages.success(request, "Topup done successfully")
+            return redirect("/gold")
+        except Exception as e:
+            messages.error(request, f"An error occurred while adding gold {e}")
+            return redirect("/gold")
+    manufacturers  = User.objects.filter(user_type="manufacturer")
+    try:
+        topup_details = []
+        man_gold_details = []
+        for i in manufacturers:
+            topup = Topup.objects.filter(manufacturer=i)
+            man_given_gold = topup.aggregate(Sum('gold')).get('gold__sum', 0.0)
+            man_used_gold = Item.objects.filter(Q(assigned_to=i) & (Q(material_used1__iexact="Gold") | Q(material_used1__iexact="gold"))).aggregate(Sum('material_used2')).get('material_used2__sum', 0.0)
+            if man_used_gold == None:
+                man_used_gold = 0.0
+            if man_given_gold == None:
+                man_given_gold = 0.0
+            man_remaining_gold = man_given_gold - man_used_gold
+            topup_details.append({
+                'manufacturer':i,
+                'topup':topup,
+                })
+            man_gold_details.append({
+                'manufacturer':i,
+                'man_given_gold': man_given_gold,
+                'man_used_gold': man_used_gold,
+                'man_remaining_gold': man_remaining_gold
+            })
+        print(topup_details)
+        total_remaining = 0
+        for i in man_gold_details:
+            total_remaining+= i['man_remaining_gold']
+        return render(request, "home/gold.html", {"topup_details": topup_details, "man_gold_details": man_gold_details, "total_remaining": total_remaining, "manufacturers": manufacturers})
+    except Exception as e:
+        messages.error(request, f"An error occurred while getting the gold details {e}")
+        return render(request, "home/gold.html",{ "topup_details":[], "man_gold_details":[], "total_remaining": total_remaining, "manufacturers": manufacturers})
+    
