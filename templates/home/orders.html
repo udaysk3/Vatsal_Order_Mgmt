@@ -357,7 +357,7 @@ No Orders Found
 
 {% endblock %}
 {% block js %}
-
+{% if request.user.user_type == 'Shop' %}
 <script>
 
   const tds = document.querySelectorAll('.edit');
@@ -442,4 +442,5 @@ No Orders Found
     //console.log(e)
   }
 </script>
+{% endif %}
 {% endblock %}

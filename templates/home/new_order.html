@@ -347,7 +347,17 @@
         </div>
         <div class="mb-3">
             <label for="material_used1" class="form-label">Material Used</label>
-            <input type="text" class="form-control mb-3" id="material_used1" name="material_used1" value="{{ item.material_used1 }}">
+            <select class="form-select mb-3 material_used1" name="material_used1" >
+                <option {% if item.material_used1 == 'Gold' %} selected {% endif %} value="Gold">Gold</option>
+                <option {% if item.material_used1 == 'Silver' %} selected {% endif %} value="Silver">Silver</option>
+                <option {% if item.material_used1 == 'Platinum' %} selected {% endif %} value="Platinum">Platinum</option>
+                <option {% if item.material_used1 != 'Gold' and item.material_used1 != 'Silver' and item.material_used1 != 'Platinum' %} selected {% endif %} value="Other">Other</option>
+            </select>
+
+            {% if item.material_used1 != 'Gold' and item.material_used1 != 'Silver' and item.material_used1 != 'Platinum' %}
+            <input type="text" class="form-control mb-3 other" value="{{ item.material_used1 }}" id="material_used1" name="material_used1">
+            {% endif %}
+        
             <input type="text" class="form-control mb-3" id="material_used2" name="material_used2" value="{{ item.material_used2 }}">
             <input type="text" class="form-control mb-3" id="material_used3" name="material_used3" value="{{ item.material_used3 }}">
             <input type="text" class="form-control mb-3" id="material_used4" name="material_used4" value="{{ item.material_used4 }}">
