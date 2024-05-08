@@ -6,7 +6,7 @@
     padding:5px;
  }
  a{
-        text-decoration: none;
+        text-decoration: 'none';
         color: black;
     
  }
@@ -213,7 +213,7 @@
                           <tbody>
                             {% if not request.user.user_type == "manufacturer" %}
                               <tr>
-                                  <td ></td>
+                                  <td class="edit_optional1 edit">{{item.optional1}}</td>
                                   <th><h5 scope="row" class="card-title fs-3 " style="display:inline;">MM</h5></th>
 
                                  <th> <h5 scope="row" class="card-title fs-3 " style="display:inline;">Carat</h5></th>
@@ -238,17 +238,18 @@
                                   <td class="edit_side_stone4 edit">{{item.side_stone4}}</td>
                               </tr>
                               <tr>
-                                  <td></td>
-                                  <td></td>
-                                  <td></td>
-                                  <td></td>
+                                <td class="edit_optional2 edit">{{item.optional2}}</td>
+                                <td class="edit_optional3 edit">{{item.optional3}}</td>
+                                <td class="edit_optional4 edit">{{item.optional4}}</td>
+                                <td class="edit_optional5 edit">{{item.optional5}}</td>
                                   <td  class="">{{item.mainsidesum}}</td>
                               </tr>
                               <tr>
                                   <td class="p-3" colspan=5></td>
                               </tr>
-                              {% endif %}
-                              {% if not request.user.user_type == "employee" %}
+                            {% endif %}
+
+                            {% if not request.user.user_type == "employee" %}
                               <tr>
                                   <td></td>
                                   <th><h5 scope="row" class="card-title fs-3" style="display:inline;">Metal Type</h5></th>
@@ -267,7 +268,7 @@
                               
                               <tr><th>
                                   <h5 scope="row" class="card-title fs-3 " style="display:inline;">Labour</h5></th>
-                                  <td ></td>
+                                  <td class="edit_optional11 edit">{{item.optional11}}</td>
                                   <td class="edit_labour1 edit">{{item.labour1}}</td>
                                   <td class="edit_labour2 edit">{{item.labour2}}</td>
                                   <td class="edit_labour3 edit">{{item.labour3}}</td>
@@ -275,26 +276,26 @@
                               </tr>
                               <tr>
                                 <td class=""></td>
-                                  <td></td>
-                                  <td></td>
-                                  <td></td>
+                                <td class="edit_optional6 edit">{{item.optional6}}</td>
+                                <td class="edit_optional7 edit">{{item.optional7}}</td>
+                                <td class="edit_optional8 edit">{{item.optional8}}</td>
                                   <td  class="">{{item.materiallaboursum}}</td>
                               </tr>
                               {% endif %}
                               <tr>
-                                {% if not request.user.user_type == "manufacturer" %}
+                              {% if not request.user.user_type == "manufacturer" %}
                                 <th>
                                   <h5 scope="row" class="card-title fs-3" style="display:inline;">Delivery Cost</h5></th>
                                   <td class="edit_delivery_cost edit" >{{item.delivery_cost}}</td>
-                                  <td></td>
-                                  <td></td>
+                                  <td class="edit_optional9 edit" >{{item.optional9}}</td>
+                                  <td class="edit_optional10 edit" >{{item.optional10}}</td>
                                   <td ></td>
-                              </tr>
-                              <tr><th>
+                                  </tr>
+                                  <tr><th>
                                   <h5 scope="row" class="card-title fs-3 " style="display:inline;">Packaging Cost</h5></th>
                                   <td class="edit_packaging_cost edit" >{{item.packaging_cost}}</td>
                                   <td >{{item.deliverypackagesum}}</td>
-                                  {% endif %}
+                              {% endif %}
                                   {% if request.user.is_superuser %}
                                   <th >Total</th>
                                   <td >{{item.total_cost}}</td>
@@ -304,13 +305,21 @@
                       </table>
                       <form action="{% url 'app:edit_table' item.id %}" method="post" class="table_form" onsubmit="editTable(this)">
                         {% csrf_token %}
+                        {% if not request.user.user_type == "employee" %}
                         <input type="hidden" class="material_used1" name="material_used1">
                         <input type="hidden" class="material_used2" name="material_used2">
                         <input type="hidden" class="material_used3" name="material_used3">
                         <input type="hidden" class="material_used4" name="material_used4">
+                        <input type="hidden" class="optional11" name="optional11">
                         <input type="hidden" class="labour1" name="labour1">
                         <input type="hidden" class="labour2" name="labour2">
                         <input type="hidden" class="labour3" name="labour3">
+                        <input type="hidden" class="optional6" name="optional6">
+                        <input type="hidden" class="optional7" name="optional7">
+                        <input type="hidden" class="optional8" name="optional8">
+                        {% endif %}
+                        {% if not request.user.user_type == "manufacturer" %}
+                        
                         <input type="hidden" class="main_stone1" name="main_stone1">
                         <input type="hidden" class="main_stone2" name="main_stone2">
                         <input type="hidden" class="main_stone3" name="main_stone3">
@@ -319,8 +328,16 @@
                         <input type="hidden" class="side_stone2" name="side_stone2">
                         <input type="hidden" class="side_stone3" name="side_stone3">
                         <input type="hidden" class="side_stone4" name="side_stone4">
+                        <input type="hidden" class="optional1" name="optional1">
+                        <input type="hidden" class="optional2" name="optional2">
+                        <input type="hidden" class="optional3" name="optional3">
+                        <input type="hidden" class="optional4" name="optional4">
+                        <input type="hidden" class="optional5" name="optional5">
+                        <input type="hidden" class="optional9" name="optional9">
+                        <input type="hidden" class="optional10" name="optional10">
                         <input type="hidden" class="delivery_cost" name="delivery_cost">
                         <input type="hidden" class="packaging_cost" name="packaging_cost">
+                        {% endif %}
                       </form>
                   </div>
               </div>
@@ -357,7 +374,6 @@ No Orders Found
 
 {% endblock %}
 {% block js %}
-{% if request.user.user_type == 'Shop' %}
 <script>
 
   const tds = document.querySelectorAll('.edit');
@@ -385,6 +401,8 @@ No Orders Found
   function editTable(e) {
     form = e;
     table = e.previousSibling.previousSibling;
+    {% if not request.user.user_type == "employee" %}
+
     const material_used1 = form.querySelector('.material_used1');
     const material_used2 = form.querySelector('.material_used2');
     const material_used3 = form.querySelector('.material_used3');
@@ -392,6 +410,34 @@ No Orders Found
     const labour1 = form.querySelector('.labour1');
     const labour2 = form.querySelector('.labour2');
     const labour3 = form.querySelector('.labour3');
+    const optional6 = form.querySelector('.optional6');
+    const optional7 = form.querySelector('.optional7');
+    const optional8 = form.querySelector('.optional8');
+    const edit_material_used1 = table.querySelector('.edit_material_used1');
+    const edit_material_used2 = table.querySelector('.edit_material_used2');
+    const edit_material_used3 = table.querySelector('.edit_material_used3');
+    const edit_material_used4 = table.querySelector('.edit_material_used4');
+    const edit_labour1 = table.querySelector('.edit_labour1');
+    const edit_labour2 = table.querySelector('.edit_labour2');
+    const edit_labour3 = table.querySelector('.edit_labour3');
+    const edit_optional6 = table.querySelector('.edit_optional6');
+    const edit_optional7 = table.querySelector('.edit_optional7');
+    const edit_optional8 = table.querySelector('.edit_optional8');
+    material_used1.value = edit_material_used1 === null ? 'None' : edit_material_used1.innerHTML ;
+    material_used2.value = edit_material_used2 === null ? 'None' : edit_material_used2.innerHTML ;
+    material_used3.value = edit_material_used3 === null ? 'None' : edit_material_used3.innerHTML ;
+    material_used4.value = edit_material_used4 === null ? 'None' : edit_material_used4.innerHTML ;
+    labour1.value = edit_labour1 === null ? 'None' : edit_labour1.innerHTML ;
+    labour2.value = edit_labour2 === null ? 'None' : edit_labour2.innerHTML ;
+    labour3.value = edit_labour3 === null ? 'None' : edit_labour3.innerHTML ;
+    optional6.value = edit_optional6 === null ? 'None' : edit_optional6.innerHTML ;
+    optional7.value = edit_optional7 === null ? 'None' : edit_optional7.innerHTML ;
+    optional8.value = edit_optional8 === null ? 'None' : edit_optional8.innerHTML ;
+    const optional11 = form.querySelector('.optional11');
+    const edit_optional11 = table.querySelector('.edit_optional11');
+    optional11.value = edit_optional11 === null ? 'None' : edit_optional11.innerHTML;  
+    {% endif %}
+    {% if not request.user.user_type == "manufacturer" %}
     const main_stone1 = form.querySelector('.main_stone1');
     const main_stone2 = form.querySelector('.main_stone2');
     const main_stone3 = form.querySelector('.main_stone3');
@@ -400,15 +446,15 @@ No Orders Found
     const side_stone2 = form.querySelector('.side_stone2');
     const side_stone3 = form.querySelector('.side_stone3');
     const side_stone4 = form.querySelector('.side_stone4');
+    const optional1 = form.querySelector('.optional1');
+    const optional2 = form.querySelector('.optional2');
+    const optional3 = form.querySelector('.optional3');
+    const optional4 = form.querySelector('.optional4');
+    const optional5 = form.querySelector('.optional5');
+    const optional9 = form.querySelector('.optional9');
+    const optional10 = form.querySelector('.optional10');
     const delivery_cost = form.querySelector('.delivery_cost');
     const packaging_cost = form.querySelector('.packaging_cost');
-    const edit_material_used1 = table.querySelector('.edit_material_used1');
-    const edit_material_used2 = table.querySelector('.edit_material_used2');
-    const edit_material_used3 = table.querySelector('.edit_material_used3');
-    const edit_material_used4 = table.querySelector('.edit_material_used4');
-    const edit_labour1 = table.querySelector('.edit_labour1');
-    const edit_labour2 = table.querySelector('.edit_labour2');
-    const edit_labour3 = table.querySelector('.edit_labour3');
     const edit_main_stone1 = table.querySelector('.edit_main_stone1');
     const edit_main_stone2 = table.querySelector('.edit_main_stone2');
     const edit_main_stone3 = table.querySelector('.edit_main_stone3');
@@ -417,30 +463,36 @@ No Orders Found
     const edit_side_stone2 = table.querySelector('.edit_side_stone2');
     const edit_side_stone3 = table.querySelector('.edit_side_stone3');
     const edit_side_stone4 = table.querySelector('.edit_side_stone4');
+    const edit_optional1 = table.querySelector('.edit_optional1');
+    const edit_optional2 = table.querySelector('.edit_optional2');
+    const edit_optional3 = table.querySelector('.edit_optional3');
+    const edit_optional4 = table.querySelector('.edit_optional4');
+    const edit_optional5 = table.querySelector('.edit_optional5');
+    const edit_optional9 = table.querySelector('.edit_optional9');
+    const edit_optional10 = table.querySelector('.edit_optional10');
     const edit_delivery_cost = table.querySelector('.edit_delivery_cost');
     const edit_packaging_cost = table.querySelector('.edit_packaging_cost');
-    material_used1.value = edit_material_used1.innerHTML;
-    material_used2.value = edit_material_used2.innerHTML;
-    material_used3.value = edit_material_used3.innerHTML;
-    material_used4.value = edit_material_used4.innerHTML;
-    labour1.value = edit_labour1.innerHTML;
-    labour2.value = edit_labour2.innerHTML;
-    labour3.value = edit_labour3.innerHTML;
-    main_stone1.value = edit_main_stone1.innerHTML;
-    main_stone2.value = edit_main_stone2.innerHTML;
-    main_stone3.value = edit_main_stone3.innerHTML;
-    main_stone4.value = edit_main_stone4.innerHTML;
-    side_stone1.value = edit_side_stone1.innerHTML;
-    side_stone2.value = edit_side_stone2.innerHTML;
-    side_stone3.value = edit_side_stone3.innerHTML;
-    side_stone4.value = edit_side_stone4.innerHTML;
-    delivery_cost.value = edit_delivery_cost.innerHTML;
-    console.log(delivery_cost.value)
-    packaging_cost.value = edit_packaging_cost.innerHTML;
+    main_stone1.value = edit_main_stone1 === null ? 'None' : edit_main_stone1.innerHTML ;
+    main_stone2.value = edit_main_stone2 === null ? 'None' : edit_main_stone2.innerHTML ;
+    main_stone3.value = edit_main_stone3 === null ? 'None' : edit_main_stone3.innerHTML ;
+    main_stone4.value = edit_main_stone4 === null ? 'None' : edit_main_stone4.innerHTML ;
+    side_stone1.value = edit_side_stone1 === null ? 'None' : edit_side_stone1.innerHTML ;
+    side_stone2.value = edit_side_stone2 === null ? 'None' : edit_side_stone2.innerHTML ;
+    side_stone3.value = edit_side_stone3 === null ? 'None' : edit_side_stone3.innerHTML ;
+    side_stone4.value = edit_side_stone4 === null ? 'None' : edit_side_stone4.innerHTML ;
+    optional1.value = edit_optional1 === null ? 'None' : edit_optional1.innerHTML ;
+    optional2.value = edit_optional2 === null ? 'None' : edit_optional2.innerHTML ;
+    optional3.value = edit_optional3 === null ? 'None' : edit_optional3.innerHTML ;
+    optional4.value = edit_optional4 === null ? 'None' : edit_optional4.innerHTML ;
+    optional5.value = edit_optional5 === null ? 'None' : edit_optional5.innerHTML ;
+    optional9.value = edit_optional9 === null ? 'None' : edit_optional9.innerHTML ;
+    optional10.value = edit_optional10 === null ? 'None' : edit_optional10.innerHTML;  
+    delivery_cost.value = edit_delivery_cost === null ? 'None' : edit_delivery_cost.innerHTML ;
+    packaging_cost.value = edit_packaging_cost === null ? 'None' : edit_packaging_cost.innerHTML ;
+    {% endif %}
     
     //e.submit();
     //console.log(e)
   }
 </script>
-{% endif %}
 {% endblock %}
