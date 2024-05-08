@@ -131,23 +131,21 @@ def editOrder(request, id):
             order.personalization = request.POST.get('personalization', order.getPersonalization())
             if request.POST.get('last_date'):
                 order.last_date = request.POST.get('last_date', order.getLastDate())
-            if request.POST.get('main_stone1') != "None":
-                order.main_stone1 = request.POST.get('main_stone1') if request.POST.get('main_stone1') != "None" else 0.0
-            order.main_stone2 = request.POST.get('main_stone2') if request.POST.get('main_stone2') != "None" else 0.0
-            order.main_stone3 = request.POST.get('main_stone3') if request.POST.get('main_stone3') != "None" else 0.0
-            order.main_stone4 = request.POST.get('main_stone4') if request.POST.get('main_stone3') != "None" else 0.0
-            order.side_stone1 = request.POST.get('side_stone1') if request.POST.get('side_stone1') != "None" else 0.0
-            order.side_stone2 = request.POST.get('side_stone2') if request.POST.get('side_stone1') != "None" else 0.0
-            order.side_stone3 = request.POST.get('side_stone3') if request.POST.get('side_stone1') != "None" else 0.0
-            order.side_stone4 = request.POST.get('side_stone4') if request.POST.get('side_stone1') != "None" else 0.0
-            order.material_used1 = request.POST.get('material_used1') if request.POST.get('material_used1') != "None" else 0.0
-            order.material_used2 = request.POST.get('material_used2') if request.POST.get('material_used1') != "None" else 0.0
-            order.material_used3 = request.POST.get('material_used3') if request.POST.get('material_used1') != "None" else 0.0
-            order.material_used4 = request.POST.get('material_used4') if request.POST.get('material_used1') != "None" else 0.0
-            order.labour1 = request.POST.get('labour1') if request.POST.get('labour1') != "None" else 0.0
-            order.labour2 = request.POST.get('labour2') if request.POST.get('labour1') != "None" else 0.0
-            order.labour3 = request.POST.get('labour3') if request.POST.get('labour1') != "None" else 0.0
-            print(request.POST.get('delivery_cost', order.getDeliveryCost()))
+            order.main_stone1 = request.POST.get('main_stone1') if request.POST.get('main_stone1') not in ["None", None] else order.main_stone1
+            order.main_stone2 = request.POST.get('main_stone2') if request.POST.get('main_stone2') not in ["None", None] else order.main_stone2
+            order.main_stone3 = request.POST.get('main_stone3') if request.POST.get('main_stone3') not in ["None", None] else order.main_stone3
+            order.main_stone4 = request.POST.get('main_stone4') if request.POST.get('main_stone3') not in ["None", None] else order.main_stone4
+            order.side_stone1 = request.POST.get('side_stone1') if request.POST.get('side_stone1') not in ["None", None] else order.side_stone1
+            order.side_stone2 = request.POST.get('side_stone2') if request.POST.get('side_stone1') not in ["None", None] else order.side_stone2
+            order.side_stone3 = request.POST.get('side_stone3') if request.POST.get('side_stone1') not in ["None", None] else order.side_stone3
+            order.side_stone4 = request.POST.get('side_stone4') if request.POST.get('side_stone1') not in ["None", None] else order.side_stone4
+            order.material_used1 = request.POST.get('material_used1') if request.POST.get('material_used1') not in ["None", None] else order.material_used1
+            order.material_used2 = request.POST.get('material_used2') if request.POST.get('material_used1') not in ["None", None] else order.material_used2
+            order.material_used3 = request.POST.get('material_used3') if request.POST.get('material_used1') not in ["None", None] else order.material_used3
+            order.material_used4 = request.POST.get('material_used4') if request.POST.get('material_used1') not in ["None", None] else order.material_used4
+            order.labour1 = request.POST.get('labour1') if request.POST.get('labour1') not in ["None", None] else order.labour1
+            order.labour2 = request.POST.get('labour2') if request.POST.get('labour1') not in ["None", None] else order.labour2
+            order.labour3 = request.POST.get('labour3') if request.POST.get('labour1') not in ["None", None] else order.labour3
             order.delivery_cost = request.POST.get('delivery_cost', order.getDeliveryCost())
             order.packaging_cost = request.POST.get('packaging_cost', order.getPackagingCost())
             order.total_cost = float(order.getMainStone4()) + float(order.getSideStone4()) + float(order.getMaterialUsed4()) + float(order.getLabour3()) + float(order.getPackagingCost()) + float(order.getDeliveryCost())
@@ -302,36 +300,34 @@ def editTable(request, id):
     order = Item.objects.get(pk=id)
     if request.method == 'POST':
         try:
-
-            print(request.POST.get('main_stone1'),request.POST.get('main_stone2'), request.POST.get('main_stone3'), request.POST.get('main_stone4') )
-            order.main_stone1 = request.POST.get('main_stone1') if request.POST.get('main_stone1') != "" else ""
-            order.main_stone2 = request.POST.get('main_stone2')  if request.POST.get('main_stone2') != "" else ""
-            order.main_stone3 = request.POST.get('main_stone3') if request.POST.get('main_stone3') != "" else ""
-            order.main_stone4 = request.POST.get('main_stone4')  if request.POST.get('main_stone4') != any(["None",None,""]) else 0.0
-            order.side_stone1 = request.POST.get('side_stone1')  if request.POST.get('side_stone1') != "" else ""
-            order.side_stone2 = request.POST.get('side_stone2')  if request.POST.get('side_stone2') != "" else ""
-            order.side_stone3 = request.POST.get('side_stone3')  if request.POST.get('side_stone3') != "" else ""
-            order.side_stone4 = request.POST.get('side_stone4')   if request.POST.get('side_stone4') != any(["None",None,""]) else 0.0
-            order.material_used1 = request.POST.get('material_used1')   if request.POST.get('material_used1') != "" else ""
-            order.material_used2 = request.POST.get('material_used2')  if request.POST.get('material_used2') != "" else ""
-            order.material_used3 = request.POST.get('material_used3')  if request.POST.get('material_used3') != "" else ""
-            order.material_used4 = request.POST.get('material_used4')  if request.POST.get('material_used4') != any(["None",None,""]) else 0.0
-            order.labour1 = request.POST.get('labour1')  if request.POST.get('labour1') != "" else ""
-            order.labour2 = request.POST.get('labour2')  if request.POST.get('labour2') != "" else ""
-            order.labour3 = request.POST.get('labour3')  if request.POST.get('labour3') != any(["None",None,""]) else 0.0
-            order.delivery_cost = request.POST.get('delivery_cost') if request.POST.get('delivery_cost') != "" else 0.0
-            order.packaging_cost = request.POST.get('packaging_cost') if request.POST.get('packaging_cost') != "" else 0.0
-            order.optional1 = request.POST.get('optional1') if request.POST.get('optional1') != any(["None",None,""]) else ""
-            order.optional2 = request.POST.get('optional2') if request.POST.get('optional2') != any(["None",None,""]) else ""
-            order.optional3 = request.POST.get('optional3') if request.POST.get('optional3') != any(["None",None,""]) else ""
-            order.optional4 = request.POST.get('optional4') if request.POST.get('optional4') != any(["None",None,""]) else ""
-            order.optional5 = request.POST.get('optional5') if request.POST.get('optional5') != any(["None",None,""]) else ""
-            order.optional6 = request.POST.get('optional6') if request.POST.get('optional6') != any(["None",None,""]) else ""
-            order.optional7 = request.POST.get('optional7') if request.POST.get('optional7') != any(["None",None,""]) else ""
-            order.optional8 = request.POST.get('optional8') if request.POST.get('optional8') != any(["None",None,""]) else ""
-            order.optional11 = request.POST.get('optional11') if request.POST.get('optional11') != any(["None",None,""]) else ""
-            order.optional9 = request.POST.get('optional9') if request.POST.get('optional9') != any(["None",None,""]) else ""
-            order.optional10 = request.POST.get('optional10') if request.POST.get('optional10') != any(["None",None,""]) else ""
+            order.main_stone1 = request.POST.get('main_stone1') if request.POST.get('main_stone1') not in ["None", None] else order.main_stone1 
+            order.main_stone2 = request.POST.get('main_stone2')  if request.POST.get('main_stone2') not in ["None", None] else order.main_stone2 
+            order.main_stone3 = request.POST.get('main_stone3') if request.POST.get('main_stone3') not in ["None", None] else order.main_stone3 
+            order.main_stone4 = request.POST.get('main_stone4')  if request.POST.get('main_stone4') not in ["None", None] else order.main_stone4
+            order.side_stone1 = request.POST.get('side_stone1')  if request.POST.get('side_stone1') not in ["None", None] else order.side_stone1 
+            order.side_stone2 = request.POST.get('side_stone2')  if request.POST.get('side_stone2') not in ["None", None] else order.side_stone2 
+            order.side_stone3 = request.POST.get('side_stone3')  if request.POST.get('side_stone3') not in ["None", None] else order.side_stone3 
+            order.side_stone4 = request.POST.get('side_stone4')   if request.POST.get('side_stone4') not in ["None", None] else order.side_stone4
+            order.material_used1 = request.POST.get('material_used1')   if request.POST.get('material_used1') not in ["None", None] else order.material_used1 
+            order.material_used2 = request.POST.get('material_used2')  if request.POST.get('material_used2') not in ["None", None] else order.material_used2 
+            order.material_used3 = request.POST.get('material_used3')  if request.POST.get('material_used3') not in ["None", None] else order.material_used3 
+            order.material_used4 = request.POST.get('material_used4') if request.POST.get('material_used4') not in ["None", None] else order.material_used4
+            order.labour1 = request.POST.get('labour1')  if request.POST.get('labour1') not in ["None", None] else order.labour1 
+            order.labour2 = request.POST.get('labour2')  if request.POST.get('labour2') not in ["None", None] else order.labour2 
+            order.labour3 = request.POST.get('labour3')  if request.POST.get('labour3') not in ["None", None] else order.labour3
+            order.delivery_cost = request.POST.get('delivery_cost') if request.POST.get('delivery_cost') not in ["None", None] else order.delivery_cost
+            order.packaging_cost = request.POST.get('packaging_cost') if request.POST.get('packaging_cost') not in ["None", None] else order.packaging_cost
+            order.optional1 = request.POST.get('optional1') if request.POST.get('optional1') not in ["None", None] else order.optional1 
+            order.optional2 = request.POST.get('optional2') if request.POST.get('optional2') not in ["None", None] else order.optional2 
+            order.optional3 = request.POST.get('optional3') if request.POST.get('optional3') not in ["None", None] else order.optional3 
+            order.optional4 = request.POST.get('optional4') if request.POST.get('optional4') not in ["None", None] else order.optional4 
+            order.optional5 = request.POST.get('optional5') if request.POST.get('optional5') not in ["None", None] else order.optional5 
+            order.optional6 = request.POST.get('optional6') if request.POST.get('optional6') not in ["None", None] else order.optional6 
+            order.optional7 = request.POST.get('optional7') if request.POST.get('optional7') not in ["None", None] else order.optional7 
+            order.optional8 = request.POST.get('optional8') if request.POST.get('optional8') not in ["None", None] else order.optional8 
+            order.optional11 = request.POST.get('optional11') if request.POST.get('optional11') not in ["None", None] else order.optional11 
+            order.optional9 = request.POST.get('optional9') if request.POST.get('optional9') not in ["None", None] else order.optional9 
+            order.optional10 = request.POST.get('optional10') if request.POST.get('optional10') not in ["None", None] else order.optional10 
             order.mainsidesum = float(order.getMainStone4()) + float(order.getSideStone4())
             order.materiallaboursum = float(order.getMaterialUsed4()) + float(order.getLabour3())
             order.deliverypackagesum = float(order.getDeliveryCost()) + float(order.getPackagingCost())
@@ -379,7 +375,6 @@ def Gold(request):
                 'man_used_gold': man_used_gold,
                 'man_remaining_gold': man_remaining_gold
             })
-        print(topup_details)
         total_remaining = 0
         for i in man_gold_details:
             total_remaining+= i['man_remaining_gold']

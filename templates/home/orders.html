@@ -347,6 +347,8 @@
                     <div class="card-body pt-2 py-0">
                         <p> <h5 class="card-title fs-3 " style="display:inline;"> Original Delivery Date : </h5> {{item.original_delivery_date|date:"d-m-Y" }} </p>
                         <p> <h5 class="card-title fs-3 " style="display:inline;"> Customer Name : </h5> {{item.customer_name}} </p>
+                        <p> <h5 class="card-title fs-3 " style="display:inline;"> Customer Email : </h5> {{item.customer_email}} </p>
+                        <p> <h5 class="card-title fs-3 " style="display:inline;"> Customer Mobile : </h5> {{item.customer_mobile}} </p>
                           <p> <h5 class="card-title fs-3 " style="display:inline;"> Fast Shipping : </h5> {% if item.fast_shipping %}
                             <i class="bi bi-check-square" style="color:green;"></i>
                             {% else %}
@@ -375,7 +377,7 @@ No Orders Found
 {% endblock %}
 {% block js %}
 <script>
-
+{% if not request.user.user_type == "shop" %}
   const tds = document.querySelectorAll('.edit');
   tds.forEach(td => {
     td.addEventListener('dblclick', () => {
@@ -494,5 +496,6 @@ No Orders Found
     //e.submit();
     //console.log(e)
   }
+  {% endif %}
 </script>
 {% endblock %}

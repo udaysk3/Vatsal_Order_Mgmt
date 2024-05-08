@@ -3,5 +3,5 @@ register = template.Library()
 
 @register.filter(name='split')
 def split(value, arg):
-    print(arg, value)
+    #print(arg, value)
     return value.split(arg)
