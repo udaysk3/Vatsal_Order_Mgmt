@@ -41,7 +41,7 @@
         
           <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
             <div class="mb-3 mb-sm-0">
-             <a href="/orders"> <h5 class="card-title fw-semibold text-primary text-decoration-underline">Order Management</h5></a>
+             <a href="/orders"> <h5 class="card-title fw-semibold text-primary text-decoration-underline">New Orders</h5></a>
             </div>
             {% if request.user.is_superuser %}
             <div>
@@ -146,7 +146,7 @@
 
 <div class="">
    
-  <div class="card pt-5">
+  <div class="card pt-5" style="background-color:#E9E8EB">
       <div class="card-body pb-0" style="">
         <span> <b>Status :</b> {{item.status}} </span> <br>
         <span> <b>Order ID :</b> {{item.order_id}} </span> <br>
@@ -160,7 +160,7 @@
             {% endif %}
             <div class="row mt-3">
               <div class="col-sm-2">
-                  <div class="card" style="border: 1px solid #ff0">
+                  <div class="card" style="">
                     {% if item.admin_photo %}
                     {% with url=item.admin_photo.url|split:'.' %}
                     
@@ -175,7 +175,7 @@
                     {% endwith %}
                       {% endif %}
                     </div>
-                    <div class="card" style="border: 1px solid #ff0">
+                    <div class="card" style="">
                       
                       {% if item.manufacturer_photo %}
                       {% with url=item.manufacturer_photo.url|split:'.' %}
@@ -349,10 +349,12 @@
                         <p> <h5 class="card-title fs-3 " style="display:inline;"> Customer Name : </h5> {{item.customer_name}} </p>
                         <p> <h5 class="card-title fs-3 " style="display:inline;"> Customer Email : </h5> {{item.customer_email}} </p>
                         <p> <h5 class="card-title fs-3 " style="display:inline;"> Customer Mobile : </h5> {{item.customer_mobile}} </p>
-                          <p> <h5 class="card-title fs-3 " style="display:inline;"> Fast Shipping : </h5> {% if item.fast_shipping %}
+                          {% comment %} <p> <h5 class="card-title fs-3 " style="display:inline;"> Fast Shipping : </h5> {% if item.fast_shipping %}
                             <i class="bi bi-check-square" style="color:green;"></i>
                             {% else %}
-                            <i class="bi bi-x-square" style="color:red;"></i>{% endif %} </p>
+                            <i class="bi bi-x-square" style="color:red;"></i>{% endif %} </p> {% endcomment %}
+                          <p> <h5 class="card-title fs-3 " style="display:inline;"> Trakcing ID : </h5> {{item.tracking_id}} </p>
+                          <p> <h5 class="card-title fs-3 " style="display:inline;"> Shipping Method : </h5> {{item.shipping_method}} </p>
                           <p> <h5 class="card-title fs-3 " style="display:inline;"> Address : </h5> {{item.address}} </p>
                           <p> <h5 class="card-title fs-3 " style="display:inline;"> Country : </h5> {{item.country}} </p>
                           <p class="mt-5"> <h5 class="card-title fs-3 " style="display:inline;"> Shop Name : </h5> {{item.shop.first_name}} {{item.shop.last_name}} </p>

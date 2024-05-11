@@ -279,10 +279,10 @@ class TimeScale {
 
   recalcDimensionsBasedOnFormat(filteredTimeScale, inverted) {
     const w = this.w
-    const Order ManagementattedTimescaleArray = this.formatDates(filteredTimeScale)
+    const DNA ExportsattedTimescaleArray = this.formatDates(filteredTimeScale)
 
     const removedOverlappingTS = this.removeOverlappingTS(
-      Order ManagementattedTimescaleArray
+      DNA ExportsattedTimescaleArray
     )
 
     w.globals.timescaleLabels = removedOverlappingTS.slice()
@@ -828,7 +828,7 @@ class TimeScale {
   formatDates(filteredTimeScale) {
     const w = this.w
 
-    const Order ManagementattedTimescaleArray = filteredTimeScale.map((ts) => {
+    const DNA ExportsattedTimescaleArray = filteredTimeScale.map((ts) => {
       let value = ts.value.toString()
 
       let dt = new DateTime(this.ctx)
@@ -866,7 +866,7 @@ class TimeScale {
       }
     })
 
-    return Order ManagementattedTimescaleArray
+    return DNA ExportsattedTimescaleArray
   }
 
   removeOverlappingTS(arr) {

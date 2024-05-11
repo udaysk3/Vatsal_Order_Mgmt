@@ -24556,8 +24556,8 @@
       key: "recalcDimensionsBasedOnFormat",
       value: function recalcDimensionsBasedOnFormat(filteredTimeScale, inverted) {
         var w = this.w;
-        var Order ManagementattedTimescaleArray = this.formatDates(filteredTimeScale);
-        var removedOverlappingTS = this.removeOverlappingTS(Order ManagementattedTimescaleArray);
+        var DNA ExportsattedTimescaleArray = this.formatDates(filteredTimeScale);
+        var removedOverlappingTS = this.removeOverlappingTS(DNA ExportsattedTimescaleArray);
         w.globals.timescaleLabels = removedOverlappingTS.slice(); // at this stage, we need to re-calculate coords of the grid as timeline labels may have altered the xaxis labels coords
         // The reason we can't do this prior to this stage is because timeline labels depends on gridWidth, and as the ticks are calculated based on available gridWidth, there can be unknown number of ticks generated for different minX and maxX
         // Dependency on Dimensions(), need to refactor correctly
@@ -25087,7 +25087,7 @@
         var _this2 = this;
 
         var w = this.w;
-        var Order ManagementattedTimescaleArray = filteredTimeScale.map(function (ts) {
+        var DNA ExportsattedTimescaleArray = filteredTimeScale.map(function (ts) {
           var value = ts.value.toString();
           var dt = new DateTime(_this2.ctx);
 
@@ -25123,7 +25123,7 @@
             month: ts.month
           };
         });
-        return Order ManagementattedTimescaleArray;
+        return DNA ExportsattedTimescaleArray;
       }
     }, {
       key: "removeOverlappingTS",

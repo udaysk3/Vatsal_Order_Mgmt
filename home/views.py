@@ -72,7 +72,9 @@ def newOrder(request):
                 'customer_name': request.POST.get('customer_name'),
                 'customer_email': request.POST.get('customer_email'),
                 'customer_mobile': request.POST.get('customer_mobile'),
-                'address': request.POST.get('address'),
+                'tracking_id': request.POST.get('tracking_id'),
+                'shipping_method': request.POST.get('shipping_method'),
+                'country': request.POST.get('country'),
                 'country': request.POST.get('country'),
             }
             try:
@@ -82,10 +84,6 @@ def newOrder(request):
             except Exception as e:
                 messages.error(request, f"An error occurred while getting the shop {e}")
                 return render(request, "home/new_order.html")
-            if request.POST.get('fast_shipping') == 'on':
-                order_data['fast_shipping'] = True
-            else:
-                order_data['fast_shipping'] = False
             if request.POST.get('completed') == 'on':
                 order_data['completed'] = True
             else:
@@ -154,13 +152,13 @@ def editOrder(request, id):
             order.customer_name = request.POST.get('customer_name', order.getCustomerName())
             order.customer_email = request.POST.get('customer_email', order.getCustomerEmail())
             order.customer_mobile = request.POST.get('customer_mobile', order.getCustomerMobile())
+            order.tracking_id = request.POST.get('tracking_id', order.getTrackingID())
+            order.shipping_method = request.POST.get('shipping_method', order.getShippingMethod())
             order.address = request.POST.get('address', order.getAddress())
             order.country = request.POST.get('country', order.getCountry())
-            order.shop = User.objects.get(pk=request.POST.get('shop_id'))
-            if request.POST.get('fast_shipping') == 'on':
-                order.fast_shipping = True
-            else:
-                order.fast_shipping = False
+            if request.POST.get('shop_id'):
+                order.shop = User.objects.get(pk=request.POST.get('shop_id'))
+            
             if request.POST.get('completed') == 'on':
                 order.completed = True
             else:

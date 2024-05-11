@@ -50,7 +50,9 @@ class Item(models.Model):
     customer_name = models.CharField(max_length=100, blank = True, null= True)
     customer_email = models.CharField(max_length=100, blank = True, null= True)
     customer_mobile = models.CharField(max_length=100, blank = True, null= True)
-    fast_shipping = models.BooleanField(default=False)
+    # fast_shipping = models.BooleanField(default=False)
+    tracking_id = models.CharField(max_length=100, blank = True, null= True)
+    shipping_method = models.CharField(max_length=100, blank = True, null= True)
     address = models.CharField(max_length=100, blank = True, null= True)
     country = models.CharField(max_length=100, blank = True, null= True)
     shop = models.ForeignKey('user.User', related_name =  'shop' ,on_delete=models.DO_NOTHING, blank = True, null= True)
@@ -164,8 +166,14 @@ class Item(models.Model):
     def getCustomerMobile(self):
         return self.customer_mobile if self.customer_mobile else ''
     
-    def getFastShipping(self):
-        return self.fast_shipping if self.fast_shipping else False
+    # def getFastShipping(self):
+    #     return self.fast_shipping if self.fast_shipping else False
+    
+    def getTrackingID(self):
+        return self.tracking_id if self.tracking_id else ''
+    
+    def getShippingMethod(self):
+        return self.shipping_method if self.shipping_method else ''
     
     def getAddress(self):
         return self.address if self.address else ''
