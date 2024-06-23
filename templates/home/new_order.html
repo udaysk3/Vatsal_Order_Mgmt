@@ -269,10 +269,17 @@
             <label for="order_date" class="form-label">Order Date</label>
             <input type="date" class="form-control" id="order_date" name="order_date" value="{{ item.order_date|date:"Y-m-d"  }}" required>
         </div>
+        {% if item.admin_photo %}
         <div class="mb-3">
             <label for="admin_photo" class="form-label">Admin Photo</label>
             <input type="file" class="form-control" id="admin_photo" name="admin_photo" value="{{item.admin_photo.url}}">
         </div>
+        {% else %}
+        <div class="mb-3">
+            <label for="admin_photo" class="form-label">Admin Photo</label>
+            <input type="file" class="form-control" id="admin_photo" name="admin_photo" >
+        </div>
+        {% endif %}
         <div class="mb-3">
             <label for="title" class="form-label">Title</label>
             <input type="text" class="form-control" id="title" name="title" value="{{ item.title }}">
@@ -360,10 +367,18 @@
         </div>
         {% endif %}
         {% if not request.user.user_type == "employee" %}
+
+        {% if item.manufacturer_photo %}
+        <div class="mb-3">
+            <label for="manufacturer_photo" class="form-label">Manufacturer Photo</label>
+            <input type="file" class="form-control" id="manufacturer_photo" name="manufacturer_photo" value="{{item.manufacturer_photo.url}}">
+        </div>
+        {% else %}
         <div class="mb-3">
             <label for="manufacturer_photo" class="form-label">Manufacturer Photo</label>
             <input type="file" class="form-control" id="manufacturer_photo" name="manufacturer_photo">
         </div>
+        {% endif %}
         <div class="mb-3">
             <label for="material_used1" class="form-label">Material Used</label>
             <select class="form-select mb-3 material_used1" name="material_used1" >

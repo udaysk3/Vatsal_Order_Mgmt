@@ -75,7 +75,7 @@ def newOrder(request):
                 'tracking_id': request.POST.get('tracking_id'),
                 'shipping_method': request.POST.get('shipping_method'),
                 'country': request.POST.get('country'),
-                'country': request.POST.get('country'),
+                'address': request.POST.get('address'),
             }
             try:
                 shop_id = request.POST.get('shop_id')
