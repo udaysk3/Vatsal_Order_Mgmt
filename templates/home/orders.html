@@ -41,7 +41,7 @@
         
           <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
             <div class="mb-3 mb-sm-0">
-             <a href="/orders"> <h5 class="card-title fw-semibold text-primary text-decoration-underline">New Orders</h5></a>
+             <a href="/orders"> <h5 class="card-title fw-semibold text-primary text-decoration-underline">Pending Orders</h5></a>
             </div>
             {% if request.user.is_superuser %}
             <div>
@@ -182,7 +182,7 @@
                       
                         <a href="{{ item.manufacturer_photo.url }}" target="_blank">
                           {% if url|last == 'png' or url|last == 'jpg' or url|last == 'jpeg' or url|last == 'bmp'  %}
-                          <img src="{{item.manufacturer_photo.url}}" width="250px" class="card-img-top"  alt="Admin Photo">
+                          <img src="{{item.manufacturer_photo.url}}" width="250px" class="card-img-top"  alt="Manufacturer Photo">
                           {% else %}
                           <video src="{{item.manufacturer_photo.url}}" width="140px" class="object-fit-cover" autoplay></video>
                           {% endif %}

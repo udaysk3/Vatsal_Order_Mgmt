@@ -14,11 +14,11 @@ def home(request):
 @login_required
 def orders(request):
     if request.user.user_type == "manufacturer":
-        orders = Item.objects.filter(assigned_to=request.user, completed=False)
+        orders = Item.objects.filter(assigned_to=request.user, completed=False).order_by('id')
     elif request.user.user_type == "shop":
-        orders = Item.objects.filter(shop=request.user)
+        orders = Item.objects.filter(shop=request.user).order_by('id')
     else:
-        orders = Item.objects.filter(completed=False)
+        orders = Item.objects.filter(completed=False).order_by('id')
     
     shops = User.objects.filter(user_type="shop")
     mans = User.objects.filter(user_type="manufacturer")
@@ -174,18 +174,18 @@ def editOrder(request, id):
 def filterByShop(request):
     shop_id = request.POST['shop_id']
     if request.user.user_type == "manufacturer":
-        orders = Item.objects.filter(assigned_to=request.user, shop=shop_id)
+        orders = Item.objects.filter(assigned_to=request.user, shop=shop_id).order_by('id')
     else:
-        orders = Item.objects.filter(shop=shop_id)
+        orders = Item.objects.filter(shop=shop_id).order_by('id')
     mans = User.objects.filter(user_type="manufacturer")
     shops = User.objects.filter(user_type="shop")
     return render(request, "home/orders.html", {"items": orders, "shops": shops, "mans": mans})
 
 def assign_to_manufacturer(request):
     if request.user.user_type == "manufacturer":
-        orders = Item.objects.filter(completed=False, assigned_to=request.user)
+        orders = Item.objects.filter(completed=False, assigned_to=request.user).order_by('id')
     else:
-        orders = Item.objects.filter(completed=False)
+        orders = Item.objects.filter(completed=False).order_by('id')
     shops = User.objects.filter(user_type="shop")
     mans = User.objects.filter(user_type="manufacturer")
     if request.method == "GET":
@@ -200,9 +200,9 @@ def assign_to_manufacturer(request):
 
 def completedOrders(request):
     if request.user.user_type == "manufacturer":
-        orders = Item.objects.filter(completed=True, assigned_to=request.user)
+        orders = Item.objects.filter(completed=True, assigned_to=request.user).order_by('id')
     else:
-        orders = Item.objects.filter(completed=True)
+        orders = Item.objects.filter(completed=True).order_by('id')
     shops = User.objects.filter(user_type="shop")
     mans = User.objects.filter(user_type="manufacturer")
     return render(request, "home/orders.html", {"items": orders, "shops": shops, "mans": mans})
