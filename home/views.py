@@ -357,7 +357,10 @@ def Gold(request):
         for i in manufacturers:
             topup = Topup.objects.filter(manufacturer=i)
             man_given_gold = topup.aggregate(Sum('gold')).get('gold__sum', 0.0)
-            man_used_gold = Item.objects.filter(Q(assigned_to=i) & (Q(material_used1__iexact="Gold") | Q(material_used1__iexact="gold"))).aggregate(Sum('material_used2')).get('material_used2__sum', 0.0)
+            qs = Item.objects.filter(assigned_to= i)
+            man_used_gold = 0
+            if qs:
+                man_used_gold = Item.objects.filter(Q(assigned_to=i) & (Q(material_used1__iexact="Gold") | Q(material_used1__iexact="gold"))).aggregate(Sum('material_used2')).get('material_used2__sum', 0.0)
             if man_used_gold == None:
                 man_used_gold = 0.0
             if man_given_gold == None:
@@ -378,6 +381,7 @@ def Gold(request):
             total_remaining+= i['man_remaining_gold']
         return render(request, "home/gold.html", {"topup_details": topup_details, "man_gold_details": man_gold_details, "total_remaining": total_remaining, "manufacturers": manufacturers})
     except Exception as e:
+        total_remaining = 0
         messages.error(request, f"An error occurred while getting the gold details {e}")
         return render(request, "home/gold.html",{ "topup_details":[], "man_gold_details":[], "total_remaining": total_remaining, "manufacturers": manufacturers})
     
