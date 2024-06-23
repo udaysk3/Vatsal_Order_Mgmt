@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 from django.contrib.messages import constants as messages
+from decouple import config
+
+import os
+from storages.backends.s3boto3 import S3Boto3Storage
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -125,19 +129,42 @@ USE_I18N = True
 USE_TZ = True
 
 
-import os
 # STATIC_URL = '/static/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # print(os.path.join(BASE_DIR, 'static'))
+# STATICFILES_LOCATION = 'static'
+MEDIAFILES_LOCATION = 'media'
+
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME')
+
+# class StaticStorage(S3Boto3Storage):
+#     location = STATICFILES_LOCATION
+
+class MediaStorage(S3Boto3Storage):
+    location = MEDIAFILES_LOCATION
+    file_overwrite = False
+
+# Configure static and media files storage
+# STATICFILES_STORAGE = 'ordermgmt.settings.StaticStorage'
+DEFAULT_FILE_STORAGE = 'ordermgmt.settings.MediaStorage'
+
+AWS_DEFAULT_ACL = 'private'
+AWS_S3_ADDRESSING_STYLE = 'virtual'
+# Set static and media URLs
+# STATIC_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{STATICFILES_LOCATION}/'
+MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{MEDIAFILES_LOCATION}/'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT =os.path.join(BASE_DIR, 'staticfiles')
-# print(STATIC_ROOT, STATIC_URL, STATICFILES_DIRS)
+print(STATIC_ROOT, STATIC_URL, STATICFILES_DIRS)
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

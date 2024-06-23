@@ -161,35 +161,36 @@
             <div class="row mt-3">
               <div class="col-sm-2">
                   <div class="card" style="">
-                    {% if item.admin_photo %}
-                    {% with url=item.admin_photo.url|split:'.' %}
                     
-                      <a href="{{ item.admin_photo.url }}" target="_blank">
-                        {% if url|last == 'png' or url|last == 'jpg' or url|last == 'jpeg' or url|last == 'bmp'  %}
-                        <img src="{{item.admin_photo.url}}" width="250px" class="card-img-top"  alt="Admin Photo">
-                        {% else %}
-                        <video src="{{item.admin_photo.url}}" width="140px"  class="object-fit-cover" autoplay></video>
-                        {% endif %}
-
-                      </a>
-                    {% endwith %}
-                      {% endif %}
+                    {% if item.admin_photo %}
+                      {% with url=item.admin_photo.url|split:'?' %}
+                        {% with file_extension=url.0|split:'.'|last %}
+                          <a href="{{ item.admin_photo.url }}" target="_blank">
+                            {% if file_extension in "png jpg jpeg bmp" %}
+                              <img src="{{ item.admin_photo.url }}" width="250px" class="card-img-top" alt="Admin Photo">
+                            {% else %}
+                              <video src="{{ item.admin_photo.url }}" width="140px" class="object-fit-cover" autoplay></video>
+                            {% endif %}
+                          </a>
+                        {% endwith %}
+                      {% endwith %}
+                    {% endif %}
                     </div>
                     <div class="card" style="">
                       
                       {% if item.manufacturer_photo %}
-                      {% with url=item.manufacturer_photo.url|split:'.' %}
-                      
-                        <a href="{{ item.manufacturer_photo.url }}" target="_blank">
-                          {% if url|last == 'png' or url|last == 'jpg' or url|last == 'jpeg' or url|last == 'bmp'  %}
-                          <img src="{{item.manufacturer_photo.url}}" width="250px" class="card-img-top"  alt="Manufacturer Photo">
-                          {% else %}
-                          <video src="{{item.manufacturer_photo.url}}" width="140px" class="object-fit-cover" autoplay></video>
-                          {% endif %}
-  
-                        </a>
+                      {% with url=item.manufacturer_photo.url|split:'?' %}
+                        {% with file_extension=url.0|split:'.'|last %}
+                          <a href="{{ item.manufacturer_photo.url }}" target="_blank">
+                            {% if file_extension in "png jpg jpeg bmp" %}
+                              <img src="{{ item.manufacturer_photo.url }}" width="250px" class="card-img-top" alt="Manufacturer Photo">
+                            {% else %}
+                              <video src="{{ item.manufacturer_photo.url }}" width="140px" class="object-fit-cover" autoplay></video>
+                            {% endif %}
+                          </a>
+                        {% endwith %}
                       {% endwith %}
-                        {% endif %}
+                    {% endif %}
                     </div>
               </div>
               <div class="col-sm-3">
