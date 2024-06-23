@@ -3,7 +3,9 @@ from django.contrib.auth.decorators import login_required
 from user.models import User
 from .models import Item, Topup
 from django.contrib import messages
-from django.db.models import Sum, Count, Q
+from django.db.models import Sum, Count, Q, FloatField
+from django.db.models import F, Func, Value, Q
+from django.db.models.functions import Cast
 # Create your views here.
 
 
@@ -339,6 +341,11 @@ def editTable(request, id):
     return render(request, 'home/new_order.html', {'item': order})
 
 
+
+class CastToFloat(Func):
+    function = 'CAST'
+    template = '%(expressions)s AS FLOAT'
+    
 def Gold(request):
     if request.method == "POST":
         try:
@@ -356,11 +363,22 @@ def Gold(request):
         man_gold_details = []
         for i in manufacturers:
             topup = Topup.objects.filter(manufacturer=i)
-            man_given_gold = topup.aggregate(Sum('gold')).get('gold__sum', 0.0)
+            man_given_gold = 0
+            if topup:
+                man_given_gold = topup.aggregate(Sum('gold')).get('gold__sum', 0.0)
             qs = Item.objects.filter(assigned_to= i)
             man_used_gold = 0
             if qs:
-                man_used_gold = Item.objects.filter(Q(assigned_to=i) & (Q(material_used1__iexact="Gold") | Q(material_used1__iexact="gold"))).aggregate(Sum('material_used2')).get('material_used2__sum', 0.0)
+                man_used_gold = (
+                        Item.objects
+                        .filter(
+                            Q(assigned_to=i) & 
+                            (Q(material_used1__iexact="Gold") | Q(material_used1__iexact="gold"))
+                        )
+                        .annotate(material_used2_float=Cast(F('material_used2'), output_field=FloatField()))
+                        .aggregate(material_used2_sum=Sum('material_used2_float'))
+                        .get('material_used2_sum', 0.0)
+                    )
             if man_used_gold == None:
                 man_used_gold = 0.0
             if man_given_gold == None:
