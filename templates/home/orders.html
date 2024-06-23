@@ -165,7 +165,7 @@
                     {% with url=item.admin_photo.url|split:'.' %}
                     
                       <a href="{{ item.admin_photo.url }}" target="_blank">
-                        {% if url.1 == 'png' or url.1 == 'jpg' or url.1 == 'jpeg' or url.1 == 'bmp'  %}
+                        {% if url|last == 'png' or url|last == 'jpg' or url|last == 'jpeg' or url|last == 'bmp'  %}
                         <img src="{{item.admin_photo.url}}" width="250px" class="card-img-top"  alt="Admin Photo">
                         {% else %}
                         <video src="{{item.admin_photo.url}}" width="140px"  class="object-fit-cover" autoplay></video>
@@ -181,7 +181,7 @@
                       {% with url=item.manufacturer_photo.url|split:'.' %}
                       
                         <a href="{{ item.manufacturer_photo.url }}" target="_blank">
-                          {% if url.1 == 'png' or url.1 == 'jpg' or url.1 == 'jpeg' or url.1 == 'bmp'  %}
+                          {% if url|last == 'png' or url|last == 'jpg' or url|last == 'jpeg' or url|last == 'bmp'  %}
                           <img src="{{item.manufacturer_photo.url}}" width="250px" class="card-img-top"  alt="Admin Photo">
                           {% else %}
                           <video src="{{item.manufacturer_photo.url}}" width="140px" class="object-fit-cover" autoplay></video>
