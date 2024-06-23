@@ -4,7 +4,7 @@ from user.models import User
 from .models import Item, Topup
 from django.contrib import messages
 from django.db.models import Sum, Count, Q, FloatField
-from django.db.models import F, Func, Value, Q
+from django.db.models import F, Func, Value, Q, Case, When
 from django.db.models.functions import Cast
 # Create your views here.
 
@@ -370,15 +370,21 @@ def Gold(request):
             man_used_gold = 0
             if qs:
                 man_used_gold = (
-                        Item.objects
-                        .filter(
-                            Q(assigned_to=i) & 
-                            (Q(material_used1__iexact="Gold") | Q(material_used1__iexact="gold"))
+                            Item.objects
+                            .filter(
+                                Q(assigned_to=i) & 
+                                (Q(material_used1__iexact="Gold") | Q(material_used1__iexact="gold"))
+                            )
+                            .annotate(
+                                material_used2_float=Case(
+                                    When(material_used2__regex=r'^[0-9]+(\.[0-9]+)?$', then=Cast('material_used2', FloatField())),
+                                    default=0.0,
+                                    output_field=FloatField(),
+                                )
+                            )
+                            .aggregate(material_used2_sum=Sum('material_used2_float'))
+                            .get('material_used2_sum', 0.0)
                         )
-                        .annotate(material_used2_float=Cast(F('material_used2'), output_field=FloatField()))
-                        .aggregate(material_used2_sum=Sum('material_used2_float'))
-                        .get('material_used2_sum', 0.0)
-                    )
             if man_used_gold == None:
                 man_used_gold = 0.0
             if man_given_gold == None:
