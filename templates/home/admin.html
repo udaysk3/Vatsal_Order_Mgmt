@@ -76,6 +76,7 @@ tbody, tbody tr th{
                               <option value="manufacturer">Manufacturer</option>
                               <option value="admin">Admin</option>
                               <option value="shop">Shop</option>
+                              <option value="designer">Designer</option>
                             </select>
                             
                           </div>
@@ -103,6 +104,7 @@ tbody, tbody tr th{
                                 <option value="manufacturer" {% if user.user_type == "manufacturer" %} selected {% endif %}>Manufacturer</option>
                                 <option value="admin" {% if user.user_type == "admin" %} selected {% endif %}>Admin</option>
                                 <option value="shop" {% if user.user_type == "shop" %} selected {% endif %}>Shop</option>
+                                <option value="designer" {% if user.user_type == "designer" %} selected {% endif %}>Designer</option>
                               </select>
                              
                             </div>

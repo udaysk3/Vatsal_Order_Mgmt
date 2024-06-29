@@ -39,6 +39,7 @@ USER_CHOICES = [
     ('manufacturer', 'Manufacturer'),
     ('admin', 'Admin'),
     ('shop', 'Shop'),
+    ('designer', 'Designer')
 ]
 class User(AbstractUser):
     username = None

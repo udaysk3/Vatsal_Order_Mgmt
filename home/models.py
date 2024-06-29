@@ -1,4 +1,5 @@
 from django.db import models
+from user.models import User
 
 class Item(models.Model):
     order_id = models.CharField(max_length=100)
@@ -194,3 +195,13 @@ class Topup(models.Model):
     gold = models.FloatField(default=0)
     def __str__(self):
         return str(self.manufacturer.email)
+    
+
+class ChatNote(models.Model):
+    item = models.ForeignKey(Item, related_name='chat_notes', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    note = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f'{self.user.username} - {self.note[:20]}'

@@ -369,8 +369,24 @@
       </div>
   </div>
   </div>
-  
+  {% if not request.user.user_type == "shop"  %}
+  <h3>Notes</h3>
+<ul>
+    {% for note in item.chat_notes.all %}
+        <li><strong>{{ note.user.username }}:</strong> {{ note.note }}- <em>{{ note.created_at }}</em></li>
+    {% endfor %}
+</ul>
 
+<!-- Form to add a new note -->
+<h5>Add a Chat Note</h5>
+<form method="post" action="{% url 'app:add_chat_note' item.id %}">
+    {% csrf_token %}
+    <textarea name="note" required></textarea>
+    <br>
+    <button type="submit" class="btn btn-primary">Add Note</button>
+</form>
+  
+{% endif %}
 {% endfor %}
 </div>
 {% else %}

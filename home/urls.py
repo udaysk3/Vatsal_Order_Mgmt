@@ -18,5 +18,6 @@ urlpatterns = [
     path("completed_orders", views.completedOrders, name="completed_orders"),
     path("markascomplete/<str:id>", views.markAsComplete, name="markascomplete"),
     path("dashboard", views.dashboard, name="dashboard"),
-    path("editshop/<str:shop_id>", views.editshop, name="editshop")
+    path("editshop/<str:shop_id>", views.editshop, name="editshop"),
+    path('item/<int:item_id>/add_chat_note/', views.add_chat_note, name='add_chat_note'),
     ]

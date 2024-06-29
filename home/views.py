@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from user.models import User
-from .models import Item, Topup
+from .models import Item, Topup, ChatNote
+
 from django.contrib import messages
 from django.db.models import Sum, Count, Q, FloatField
 from django.db.models import F, Func, Value, Q, Case, When
@@ -409,3 +410,13 @@ def Gold(request):
         messages.error(request, f"An error occurred while getting the gold details {e}")
         return render(request, "home/gold.html",{ "topup_details":[], "man_gold_details":[], "total_remaining": total_remaining, "manufacturers": manufacturers})
     
+    
+    
+
+@login_required
+def add_chat_note(request, item_id):
+    item = get_object_or_404(Item, id=item_id)
+    if request.method == 'POST':
+        user  = request.user
+        ChatNote.objects.create(item=item, user=user, note=request.POST['note'])
+        return redirect('/orders')
