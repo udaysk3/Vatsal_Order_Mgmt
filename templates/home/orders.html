@@ -155,6 +155,9 @@
         {% if not item.completed and request.user.is_superuser %}
             <a  href="{% url "app:markascomplete" item.id %}" class="btn btn-success" style="position: absolute; left: 10px; top: 10px;">Mark as Complete</a>
             {% endif %}
+        {% if item.completed and request.user.is_superuser %}
+            <a  href="{% url "app:markascomplete" item.id %}" class="btn btn-success" style="position: absolute; left: 10px; top: 10px;">Mark as not Complete</a>
+            {% endif %}
             {% if not request.user.user_type == "shop" %}
             <a href="{% url 'app:edit_order' item.id  %}" class="btn btn-warning" style="position: absolute; right: 10px; top: 10px;">Edit Order</a>
             {% endif %}

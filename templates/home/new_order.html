@@ -63,9 +63,20 @@
 </div>
   <div class="mb-3">
     <label for="status" class="form-label">Status</label>
-    <input type="text" class="form-control" id="status" name="status" required>
+    <select class="form-select mb-3 shipping_method" id="status" name="status">
+        <option value="CAD Pending ">CAD Pending </option>
+        <option value="In Production">In Production</option>
+        <option value="Delivered ">Delivered </option>
+    </select>
 </div>
 
+<div class="mb-3">
+            <label for="stone_status" class="form-label">Stone Status</label>
+            <select class="form-select mb-3 stone_status bg-light"  name="stone_status">
+                <option value="Stone Received" >Stone Received</option>
+                <option value="Stone Pending" >Stone Pending</option>
+            </select>
+        </div>
 
 <div class="mb-3">
     <label for="order_date" class="form-label">Order Date</label>
@@ -263,7 +274,18 @@
         </div>
         <div class="mb-3">
             <label for="status" class="form-label">Status</label>
-            <input type="text" class="form-control" id="status" name="status" value="{{ item.status }}" required>
+            <select class="form-select mb-3 shipping_method" id="status" name="status">
+                <option value="CAD Pending" {% if item.status == 'CAD Pending' %} selected {% endif %}>CAD Pending </option>
+                <option value="In Production" {% if item.status == 'In Production' %} selected {% endif %}>In Production</option>
+                <option value="Delivered " {% if item.status == 'Delivered' %} selected {% endif %}>Delivered </option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="stone_status" class="form-label">Stone Status</label>
+            <select class="form-select mb-3 stone_status bg-light"  name="stone_status">
+                <option value="Stone Received" {% if item.stone_status == 'Stone Received' %} selected {% endif %}>Stone Received</option>
+                <option value="Stone Pending" {% if item.stone_status == 'Stone Pending' %} selected {% endif %}>Stone Pending</option>
+            </select>
         </div>
         <div class="mb-3">
             <label for="order_date" class="form-label">Order Date</label>
@@ -339,9 +361,9 @@
         <div class="mb-3">
             <label for="shipping_method" class="form-label">Shipping Method </label>
             <select class="form-select mb-3 shipping_method" name="shipping_method">
-                <option value="UPS" {% if item.shipping_method == "UPS" %}checked{% endif %}>UPS</option>
-                <option value="USPS" {% if item.shipping_method == "USPS" %}checked{% endif %}>USPS</option>
-                <option value="Legal" {% if item.shipping_method == "Legal" %}checked{% endif %}>Legal</option>
+                <option value="UPS" {% if item.shipping_method == "UPS" %}selected{% endif %}>UPS</option>
+                <option value="USPS" {% if item.shipping_method == "USPS" %}selected{% endif %}>USPS</option>
+                <option value="Legal" {% if item.shipping_method == "Legal" %}selected{% endif %}>Legal</option>
             </select>
         </div>
         <div class="mb-3">

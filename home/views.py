@@ -212,9 +212,12 @@ def completedOrders(request):
 
 def markAsComplete(request,id):
     try:
-        #print(id)
+        # print(id)
         order = Item.objects.get(id=id)
-        order.completed = True
+        if order.completed:
+            order.completed = False
+        else:
+            order.completed = True
         order.save()
         messages.success(request, "Order marked as completed")
     except Exception as e:
@@ -267,7 +270,7 @@ def dashboard(request):
             item = Item.objects.filter(shop=shop_id).update(revenue=revenue)
             item.save()
             return redirect("/dashboard")  
-        
+
 def editshop(request, shop_id):
     if request.method == "POST":
         try:
@@ -293,7 +296,6 @@ def deleteOrder(request, id):
     except Exception as e:
         messages.error(request, f"An error occurred while deleting the order {e}")
     return redirect('/orders')
-
 
 
 @login_required
@@ -342,11 +344,10 @@ def editTable(request, id):
     return render(request, 'home/new_order.html', {'item': order})
 
 
-
 class CastToFloat(Func):
     function = 'CAST'
     template = '%(expressions)s AS FLOAT'
-    
+
 def Gold(request):
     if request.method == "POST":
         try:
