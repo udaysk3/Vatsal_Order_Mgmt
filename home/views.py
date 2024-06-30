@@ -445,3 +445,45 @@ def add_chat_note(request, item_id):
         ChatNote.objects.create(item=item, user=user, note=request.POST['note'])
         messages.success(request, "Note Added Successfully")
         return redirect('/orders')
+
+
+import openpyxl
+from django.http import HttpResponse
+from openpyxl.writer.excel import save_virtual_workbook
+
+def export_items_to_excel(request):
+    # Create an in-memory workbook
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Items"
+
+    # Define the column headers
+    headers = [
+        'Order ID', 'Manufacturer Photo', 'Title', 'Item Details', 
+        'Stone Details', 'Material Details', 'Delivery Details'
+    ]
+    ws.append(headers)
+
+    # Get all items
+    items = Item.objects.all()
+
+    # Append item data to the worksheet
+    for item in items:
+        ws.append([
+            item.order_id,
+            item.manufacturer_photo.url if item.manufacturer_photo else '',
+            item.title,
+            f"Material({item.material}) - Color({item.color}) - Size({item.size}) - Personalization({item.personalization})",
+            f"Main Stone[MM({item.main_stone1}), CARAT({item.main_stone2}), Rate({item.main_stone3}), Total Price({item.main_stone4})] - "
+            f"Side Stone[MM({item.side_stone1}), CARAT({item.side_stone2}), Rate({item.side_stone3}), Total Price({item.side_stone4})]",
+            f"Material Used[{item.material_used1}, Weight({item.material_used2}), Per Gram({item.material_used3}), Total Cost({item.material_used4})]",
+            f"Shop({str(item.shop.first_name) + str(item.shop.last_name) if item.shop else ''}) - Customer({item.customer_name}) - Address({item.address}) - Assigned To({item.assigned_to.first_name + item.assigned_to.last_name if item.assigned_to else ''})"
+        ])
+
+    # Set the response
+    response = HttpResponse(
+        content=save_virtual_workbook(wb),
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename=items.xlsx'
+    return response

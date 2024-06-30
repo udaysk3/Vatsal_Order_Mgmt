@@ -176,6 +176,7 @@ main {
                 </div>
               </div>
               
+              
           </div>
           
             {% endif %}
@@ -217,7 +218,11 @@ main {
                 </div>
                 
             </div>
-            
+            {% if request.user.user_type == "admin" %}
+            <form method="get" action="{% url 'app:export_to_excel' %}">
+              <button class="btn btn-success" type="submit">Export to Excel</button>
+          </form>
+          {% endif %}
             
           </div>
           <div>

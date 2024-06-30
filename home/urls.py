@@ -20,4 +20,5 @@ urlpatterns = [
     path("dashboard", views.dashboard, name="dashboard"),
     path("editshop/<str:shop_id>", views.editshop, name="editshop"),
     path('item/<int:item_id>/add_chat_note/', views.add_chat_note, name='add_chat_note'),
+     path('export-to-excel/', views.export_items_to_excel, name='export_to_excel'),
     ]
