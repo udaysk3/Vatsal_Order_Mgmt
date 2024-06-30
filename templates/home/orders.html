@@ -1,7 +1,87 @@
 {% extends 'base.html' %} {% load static %} {% load custom %} {% block css %}
-<link rel="stylesheet" href="{% static 'css/style.css' %}" />
-
 <style>
+
+  :root {
+  --border-color: #cccccc;
+  --background-color: #f1f1f1;
+  --transition: all 0.2s ease;
+}
+
+
+main {
+}
+
+.accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.accordion .accordion-item {
+  background-color: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+}
+
+.accordion .accordion-item .accordion-item-description-wrapper hr {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  visibility: visible;
+}
+
+.accordion .accordion-item.open .accordion-item-description-wrapper hr {
+  visibility: visible;
+}
+
+.accordion .accordion-item .accordion-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.accordion .accordion-item .accordion-item-header .accordion-item-header-title {
+  font-weight: 600;
+}
+
+.accordion .accordion-item .accordion-item-header .accordion-item-header-icon {
+  transition: var(--transition);
+}
+
+.accordion
+  .accordion-item.open
+  .accordion-item-header
+  .accordion-item-header-icon {
+  transform: rotate(-180deg);
+}
+
+.accordion .accordion-item .accordion-item-description-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.accordion .accordion-item.open .accordion-item-description-wrapper {
+  grid-template-rows: 1fr;
+}
+
+.accordion
+  .accordion-item
+  .accordion-item-description-wrapper
+  .accordion-item-description {
+  min-height: 0;
+}
+
+.accordion
+  .accordion-item
+  .accordion-item-description-wrapper
+  .accordion-item-description
+  p {
+  padding: 10px;
+}
+
     .table>:not(caption)>*>*{
     padding:5px;
  }
@@ -72,7 +152,7 @@
                           <select class="form-select" name="order" id="order" required>
                               <option value="">Select Order</option>
 
-                              {% for order in items %}
+                              {% for order in items.object_list %}
                               <option value="{{order.id}}">{{order.order_id}} - {{order.title}}</option>
                               {% endfor %}
                           </select>
@@ -141,16 +221,54 @@
             
           </div>
           <div>
+            <div data-ui-tablist class="ui-accordion ui-accordion--outlined" data-ui-transition="collapse-fade">
+              <main>
+                <div class="accordion">
+                  <div class="accordion-item" style="background-color: #FFFFFF; border:none;">
+        <div class="accordion-item-header" >
+          <span style="font-weight: 900;" class="accordion-item-header-title">Order ID </span>
+          <span style="font-weight: 900;" class="accordion-item-header-title">Title </span>
+          <span style="font-weight: 900;" class="accordion-item-header-title">Shop </span>
+          <svg style="color: transparent;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down accordion-item-header-icon">
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+        </div>
+                  </div>
             {% if items %}
-{% for item in items %}
-
+                
+{% for item in items.object_list %}
+<div class="accordion-item">
+      <div class="accordion-item-header">
+        <span class="accordion-item-header-title">{{ item.order_id }}</span>
+        <span class="accordion-item-header-title">{{ item.title }}</span>
+        <span class="accordion-item-header-title">{{ item.shop }}</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down accordion-item-header-icon">
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </div>
+      <div class="accordion-item-description-wrapper">
+        <div class="accordion-item-description">
 <div class="">
    
   <div class="card pt-5" style="background-color:#E9E8EB">
       <div class="card-body pb-0" style="">
-        <span> <b>Status :</b> {{item.status}} </span> <br>
+        <span> <b>Status :</b> <button {% if item.status == 'In Production' %}
+          style="background-color: #E5E22A;"
+          {% endif %} 
+          disabled
+          class="btn 
+          {% if item.status == 'CAD Pending' %}
+          btn-warning
+          {% elif item.status == 'In Production' %}
+          btn-warning-emphasis
+          {% else %}
+          btn-success
+          {% endif %}
+          ">{{ item.status }}</button> </span> <br>
         <span> <b>Order ID :</b> {{item.order_id}} </span> <br>
+        {% if not request.user.user_type == 'manufacturer' %}
         <span> <b>2nd Order ID :</b> {{item.order_id_2}} </span> <br>
+        {% endif %}
         <span> <b>Order Date  :</b> {{item.order_date|date:"d-m-Y"}} </span> <br>
         {% if not item.completed and request.user.is_superuser %}
             <a  href="{% url "app:markascomplete" item.id %}" class="btn btn-success" style="position: absolute; left: 10px; top: 10px;">Mark as Complete</a>
@@ -210,7 +328,13 @@
                             <p class=" fs-4 "> <h5 class="card-title fs-4 " style="display:inline;"> Last Date : </h5> {{item.last_date|date:"d-m-Y"}} </p>
                       </div>
                   </div>
-              </div>
+                  <div class="edit-status-stone">
+                    
+                    
+                    <input type="text" style="background-color: #fff;" class="form-control edit_stone_status" value="{{item.stone_status}}" disabled>
+                  </div>
+                </div>
+
               <div class="col-sm-4">
                   <div class="card">
                       <table class="table table-bordered" >
@@ -309,6 +433,9 @@
                       </table>
                       <form action="{% url 'app:edit_table' item.id %}" method="post" class="table_form" onsubmit="editTable(this)">
                         {% csrf_token %}
+                        {% if not request.user.user_type == "designer" and request.user.user_type != "shop" %}
+                        <input type="hidden" class="stone_status" name="stone_status">
+                        {% endif %}
                         {% if not request.user.user_type == "employee" %}
                         <input type="hidden" class="material_used1" name="material_used1">
                         <input type="hidden" class="material_used2" name="material_used2">
@@ -373,43 +500,81 @@
   </div>
   </div>
   {% if not request.user.user_type == "shop"  %}
-  <h3>Notes</h3>
-<ul>
+  <h3 class="ms-3">Notes</h3>
+<ul class="mx-3 p-2 pt-1" style="background-color: #fff; height: 80px; overflow-y: scroll; " >
+  {% if item.chat_notes.all %}
     {% for note in item.chat_notes.all %}
         <li><strong>{{ note.user.username }}:</strong> {{ note.note }}- <em>{{ note.created_at }}</em></li>
     {% endfor %}
+  {% else %}
+    No Notes 
+  {% endif %}
 </ul>
 
 <!-- Form to add a new note -->
-<h5>Add a Chat Note</h5>
-<form method="post" action="{% url 'app:add_chat_note' item.id %}">
+<form method="post" class="p-3" action="{% url 'app:add_chat_note' item.id %}">
+  <h5>Add a Note</h5>
     {% csrf_token %}
-    <textarea name="note" required></textarea>
+    <textarea class="form-control bg-light" id="exampleFormControlTextarea1"  rows="2" name="note" required></textarea>
     <br>
     <button type="submit" class="btn btn-primary">Add Note</button>
 </form>
   
 {% endif %}
+</div>
+     </div>
+   </div>
 {% endfor %}
 </div>
 {% else %}
 No Orders Found
 {% endif %}
+</div>
+</main>
+
+<nav aria-label="Page navigation example" style="margin-top: 10px;">
+  <ul class="pagination pagination-lg justify-content-center">
+    {%if items.has_previous %}
+    <li class="page-item"><a class="page-link" href="?page={{items.previous_page_number}}">{{items.previous_page_number}}</a></li>
+    {% endif %}
+    <li class="page-item active"><a class="page-link" href="#">{{items.number}}</a></li>
+    {%if items.has_next %}
+    <li class="page-item"><a class="page-link" href="?page={{items.next_page_number}}">{{items.next_page_number}}</a></li>
+    {% endif %}
+    
+  </ul>
+</nav>
 
 {% endblock %}
 {% block js %}
 <script>
-{% if not request.user.user_type == "shop" %}
+  document.querySelectorAll(".accordion-item").forEach((item) => {
+  item.querySelector(".accordion-item-header").addEventListener("click", () => {
+    item.classList.toggle("open");
+  });
+});
+  {% if not request.user.user_type == "shop" %}
   const tds = document.querySelectorAll('.edit');
   tds.forEach(td => {
     td.addEventListener('dblclick', () => {
       const form = td.closest("table").nextSibling.nextSibling;
+      const formtds = td.closest("table").querySelectorAll('.edit')
+      console.log(form)
+      const edit_stone_statuss = document.querySelectorAll('.edit-status-stone')
+      edit_stone_statuss.forEach(edit_stone_status =>{
+        edit_stone_status.innerHTML = `<select class="form-select mb-3  edit_stone_status bg-light" style="background-color:#fff;"  name="stone_status">
+                    <option value="Stone Pending">Stone Pending</option>
+                    <option value="Stone Received">Stone Received</option>
+
+                  </select>`
+        
+      })
       if (document.querySelector('.submit-btn')) {
   
       } else {
   
   
-        tds.forEach(td => {
+        formtds.forEach(td => {
             td.setAttribute('contenteditable', "true");
         });
         const Submit = document.createElement('button');
@@ -425,6 +590,9 @@ No Orders Found
   function editTable(e) {
     form = e;
     table = e.previousSibling.previousSibling;
+    const stone_status = form.querySelector('.stone_status');
+    const edit_stone_status = table.parentNode.parentNode.previousSibling.previousSibling.querySelector('.edit_stone_status');
+    stone_status.value = edit_stone_status.value ;
     {% if not request.user.user_type == "employee" %}
 
     const material_used1 = form.querySelector('.material_used1');

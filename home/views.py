@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.db.models import Sum, Count, Q, FloatField
 from django.db.models import F, Func, Value, Q, Case, When
 from django.db.models.functions import Cast
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 
 
@@ -22,10 +23,21 @@ def orders(request):
         orders = Item.objects.filter(shop=request.user).order_by('id')
     else:
         orders = Item.objects.filter(completed=False).order_by('id')
-    
+
+    p_customers = Paginator(orders, 10)
+    page_number = request.GET.get("page")
+    try:
+        page_obj = p_customers.get_page(page_number)
+    except PageNotAnInteger:
+        page_obj = p_customers.page(1)
+    except EmptyPage:
+        page_obj = p_customers.page(p_customers.num_pages)
+
     shops = User.objects.filter(user_type="shop")
     mans = User.objects.filter(user_type="manufacturer")
-    return render(request, "home/orders.html", {"items": orders, "shops" : shops, "mans": mans})
+    return render(
+        request, "home/orders.html", {"items": page_obj, "shops": shops, "mans": mans}
+    )
 
 
 @login_required
@@ -42,6 +54,7 @@ def newOrder(request):
     if request.method == "POST":
         try:
             order_data = {
+                'stone_status': request.POST.get('stone_status'),
                 'order_id': request.POST.get('order_id'),
                 'order_id_2': request.POST.get('order_id_2'),
                 'status': request.POST.get('status'),
@@ -132,6 +145,7 @@ def editOrder(request, id):
             order.personalization = request.POST.get('personalization', order.getPersonalization())
             if request.POST.get('last_date'):
                 order.last_date = request.POST.get('last_date', order.getLastDate())
+            order.stone_status = request.POST.get('stone_status') if request.POST.get('stone_status') not in ["None", None] else order.stone_status
             order.main_stone1 = request.POST.get('main_stone1') if request.POST.get('main_stone1') not in ["None", None] else order.main_stone1
             order.main_stone2 = request.POST.get('main_stone2') if request.POST.get('main_stone2') not in ["None", None] else order.main_stone2
             order.main_stone3 = request.POST.get('main_stone3') if request.POST.get('main_stone3') not in ["None", None] else order.main_stone3
@@ -206,9 +220,19 @@ def completedOrders(request):
         orders = Item.objects.filter(completed=True, assigned_to=request.user).order_by('id')
     else:
         orders = Item.objects.filter(completed=True).order_by('id')
+    p_customers = Paginator(orders, 10)
+    page_number = request.GET.get("page")
+    try:
+        page_obj = p_customers.get_page(page_number)
+    except PageNotAnInteger:
+        page_obj = p_customers.page(1)
+    except EmptyPage:
+        page_obj = p_customers.page(p_customers.num_pages)
     shops = User.objects.filter(user_type="shop")
     mans = User.objects.filter(user_type="manufacturer")
-    return render(request, "home/orders.html", {"items": orders, "shops": shops, "mans": mans})
+    return render(
+        request, "home/orders.html", {"items": page_obj, "shops": shops, "mans": mans}
+    )
 
 def markAsComplete(request,id):
     try:
@@ -303,6 +327,7 @@ def editTable(request, id):
     order = Item.objects.get(pk=id)
     if request.method == 'POST':
         try:
+            order.stone_status = request.POST.get('stone_status') if request.POST.get('stone_status') not in ["None", None] else order.stone_status 
             order.main_stone1 = request.POST.get('main_stone1') if request.POST.get('main_stone1') not in ["None", None] else order.main_stone1 
             order.main_stone2 = request.POST.get('main_stone2')  if request.POST.get('main_stone2') not in ["None", None] else order.main_stone2 
             order.main_stone3 = request.POST.get('main_stone3') if request.POST.get('main_stone3') not in ["None", None] else order.main_stone3 
@@ -410,9 +435,7 @@ def Gold(request):
         total_remaining = 0
         messages.error(request, f"An error occurred while getting the gold details {e}")
         return render(request, "home/gold.html",{ "topup_details":[], "man_gold_details":[], "total_remaining": total_remaining, "manufacturers": manufacturers})
-    
-    
-    
+
 
 @login_required
 def add_chat_note(request, item_id):
@@ -420,4 +443,5 @@ def add_chat_note(request, item_id):
     if request.method == 'POST':
         user  = request.user
         ChatNote.objects.create(item=item, user=user, note=request.POST['note'])
+        messages.success(request, "Note Added Successfully")
         return redirect('/orders')
