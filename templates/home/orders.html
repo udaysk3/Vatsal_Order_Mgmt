@@ -531,16 +531,44 @@ No Orders Found
 </div>
 </main>
 
+
+
 <nav aria-label="Page navigation example" style="margin-top: 10px;">
   <ul class="pagination pagination-lg justify-content-center">
-    {%if items.has_previous %}
-    <li class="page-item"><a class="page-link" href="?page={{items.previous_page_number}}">{{items.previous_page_number}}</a></li>
+{% if items.has_previous %}
+  <li class="page-item"><a class="page-link" href="?page={{ items.previous_page_number }}">Prev</a></li>
+
+{% if items.number > 3 %}
+      <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+    {% if items.number > 4 %}
+      <li class="page-item"><a class="page-link" >...</a></li>
     {% endif %}
-    <li class="page-item active"><a class="page-link" href="#">{{items.number}}</a></li>
-    {%if items.has_next %}
-    <li class="page-item"><a class="page-link" href="?page={{items.next_page_number}}">{{items.next_page_number}}</a></li>
-    {% endif %}
-    
+  {% endif %}
+{% endif %}
+
+{% for num in items.paginator.page_range %}
+  {% if items.number == num %}
+      <li class="page-item"><a class="page-link active" href="?page={{ num }}">{{ num }}</a></li>
+  {% elif num > items.number|add:'-3' and num < items.number|add:'3' %}
+      <li class="page-item"><a class="page-link " href="?page={{ num }}">{{ num }}</a></li>
+  {% endif %}
+{% endfor %}
+
+{% if items.has_next %}
+  {% if items.number < items.paginator.num_pages|add:'-3' %}
+    <li class="page-item"><a class="page-link">...</a></li>
+    <li class="page-item"><a class="page-link" href="?page={{ items.paginator.num_pages }}">
+      {{ items.paginator.num_pages }}
+    </a></li>
+  {% elif items.number < items.paginator.num_pages|add:'-2' %}
+    <li class="page-item"><a class="page-link" href="?page={{ items.paginator.num_pages }}">
+      {{ items.paginator.num_pages }}
+    </a></li>
+  {% endif %}
+
+  <li class="page-item"><a class="page-link" href="?page={{ items.next_page_number }}">Next</a></li>
+{% endif %}
+
   </ul>
 </nav>
 
