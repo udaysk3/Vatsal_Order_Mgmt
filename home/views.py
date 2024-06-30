@@ -24,7 +24,7 @@ def orders(request):
     else:
         orders = Item.objects.filter(completed=False).order_by('id')
 
-    p_customers = Paginator(orders, 1)
+    p_customers = Paginator(orders, 10)
     page_number = request.GET.get("page")
     try:
         page_obj = p_customers.get_page(page_number)
